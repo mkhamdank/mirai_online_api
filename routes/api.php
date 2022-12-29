@@ -22,3 +22,4 @@ Route::post('/login', 'App\Http\Controllers\LoginController@store');
 
 // CONTROL VENDOR
 Route::middleware('auth:sanctum')->get('/fetch/plan_delivery', 'App\Http\Controllers\MasterController@fetchPlanDelivery');
+Route::middleware('auth:sanctum')->get('/generate_stock_policy', 'App\Http\Controllers\MasterController@generateStockPolicy');
