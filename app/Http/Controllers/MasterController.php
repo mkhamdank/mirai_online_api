@@ -63,11 +63,11 @@ class MasterController extends Controller
 
                 $count_updated += $update;
 
-            } catch (\Throwable$th) {
+            } catch (\Throwable $th) {
                 DB::rollback();
                 $response = array(
                     'status' => false,
-                    'message' => $e->getMessage(),
+                    'message' => $th->getMessage(),
                 );
                 return Response::json($response);
 
@@ -104,6 +104,21 @@ class MasterController extends Controller
         );
         return Response::json($response);
 
+    }
+
+    public function getAuditMolding()
+    {
+        $molding_check = db::select("SELECT * from pe_molding_checks");
+        $molding_finding = db::select("SELECT * from pe_molding_findings");
+        $molding_handling = db::select("SELECT * from pe_molding_handlings");
+
+        $response = array(
+            'status' => true,
+            'molding_check' => $molding_check,
+            'molding_finding' => $molding_finding,
+            'molding_handling' => $molding_handling,
+        );
+        return Response::json($response);
     }
 
 }
