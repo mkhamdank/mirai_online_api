@@ -252,4 +252,27 @@ class MasterController extends Controller
         ]);
     }
 
+    public function updateTableSync(Request $request)
+      {
+        try {
+          $status = 200;
+
+          $total = DB::table($request->get('table'))->where('id',$request->get('id'))->update([
+            'synced_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+          ]);
+
+
+          $response = $total;
+          return response()->json($response, $status);
+
+        } catch (\Exception$e) {
+          $status = 401;
+          $response = [
+            'error' => $e->getMessage(),
+          ];
+          return response()->json($response, $status);
+        }
+      }
+
 }
