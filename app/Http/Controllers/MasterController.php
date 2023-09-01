@@ -34,39 +34,22 @@ class MasterController extends Controller
     public function fetchDataQA()
     {
 
-        // $ng_list = DB::table('ng_lists')->where('synced_at',null)->get();
-        // $outgoing_crestec = DB::table('qa_outgoing_vendor_crestecs')->where('synced_at',null)->get();
+        $ng_list = DB::table('ng_lists')->where('synced_at',null)->get();
+        $outgoing_crestec = DB::table('qa_outgoing_vendor_crestecs')->where('synced_at',null)->get();
         // $outgoing = DB::table('qa_outgoing_vendors')->where('synced_at',null)->get();
         // $outgoing_final = DB::table('qa_outgoing_vendor_finals')->where('synced_at',null)->get();
         // $outgoing_recheck = DB::table('qa_outgoing_vendor_rechecks')->where('synced_at',null)->get();
-        $delivery = db::table('vendor_plan_deliveries')
-        ->where('due_date', 'LIKE', '%' . date('Y-m') . '%')
-        ->select(
-            'material_number',
-            'material_description',
-            'due_date',
-            db::raw('date_format(due_date, "%d-%b") AS date'),
-            'plan',
-            'actual'
-        )
-        ->get();
 
         $response = array(
             'status' => true,
-            'delivery' => $delivery,
+            'ng_list' => $ng_list,
+            'outgoing_crestec' => $outgoing_crestec,
+            // 'outgoing' => $outgoing,
+            // 'outgoing_final' => $outgoing_final,
+            // 'outgoing_recheck' => $outgoing_recheck,
+            'sync_at' => date('Y-m-d H:i:s'),
         );
         return Response::json($response);
-
-        // $response = array(
-        //     'status' => true,
-        //     'ng_list' => $ng_list,
-        //     'outgoing_crestec' => $outgoing_crestec,
-        //     'outgoing' => $outgoing,
-        //     'outgoing_final' => $outgoing_final,
-        //     'outgoing_recheck' => $outgoing_recheck,
-        //     'sync_at' => date('Y-m-d H:i:s'),
-        // );
-        // return Response::json($response);
 
     }
 
