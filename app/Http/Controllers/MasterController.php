@@ -255,7 +255,6 @@ class MasterController extends Controller
     public function updateTableSync(Request $request)
       {
         try {
-          $status = 200;
 
           $total = DB::table($request->get('table'))->where('id',$request->get('id'))->update([
             'synced_at' => date('Y-m-d H:i:s'),
@@ -263,15 +262,16 @@ class MasterController extends Controller
           ]);
 
 
-          $response = $total;
-          return response()->json($response, $status);
+          $response = array(
+                'status' => true,
+            );
+            return Response::json($response);
 
         } catch (\Exception$e) {
-          $status = 401;
           $response = [
             'error' => $e->getMessage(),
           ];
-          return response()->json($response, $status);
+          return Response::json($response);
         }
       }
 
