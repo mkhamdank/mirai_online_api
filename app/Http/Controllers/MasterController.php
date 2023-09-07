@@ -131,21 +131,21 @@ class MasterController extends Controller
 
     public function getAuditMolding()
     {
-        $molding_check = db::select("SELECT * from pe_molding_checks where sync_at is null");
-        $molding_check_detail = db::select("SELECT * from pe_molding_check_details where sync_at is null");
-        $molding_finding = db::select("SELECT * from pe_molding_findings where sync_at is null");
-        $molding_handling = db::select("SELECT * from pe_molding_handlings where sync_at is null");
+        $molding_check = db::connection('mysql_new')->select("SELECT * from pe_molding_checks where sync_at is null");
+        $molding_check_detail = db::connection('mysql_new')->select("SELECT * from pe_molding_check_details where sync_at is null");
+        $molding_finding = db::connection('mysql_new')->select("SELECT * from pe_molding_findings where sync_at is null");
+        $molding_handling = db::connection('mysql_new')->select("SELECT * from pe_molding_handlings where sync_at is null");
 
-        db::table('pe_molding_checks')->whereNull('sync_at')
+        db::connection('mysql_new')->table('pe_molding_checks')->whereNull('sync_at')
         ->update(['sync_at' => date('Y-m-d H:i:s')]);
 
-        db::table('pe_molding_check_details')->whereNull('sync_at')
+        db::connection('mysql_new')->table('pe_molding_check_details')->whereNull('sync_at')
         ->update(['sync_at' => date('Y-m-d H:i:s')]);
 
-        db::table('pe_molding_findings')->whereNull('sync_at')
+        db::connection('mysql_new')->table('pe_molding_findings')->whereNull('sync_at')
         ->update(['sync_at' => date('Y-m-d H:i:s')]);
 
-        db::table('pe_molding_handlings')->whereNull('sync_at')
+        db::connection('mysql_new')->table('pe_molding_handlings')->whereNull('sync_at')
         ->update(['sync_at' => date('Y-m-d H:i:s')]);
 
 
