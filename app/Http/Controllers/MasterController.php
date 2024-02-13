@@ -287,12 +287,14 @@ class MasterController extends Controller
         public function fetchEQDelivery(Request $request)
         {
 
-            $need_if = db::table('equipment_plan_deliveries')
+            $need_if = db::::connection('mysql_new')
+            ->table('equipment_plan_deliveries')
             ->where('need_if', 1)
             ->get();
 
             try {
-              $update_need_if = db::table('equipment_plan_deliveries')
+              $update_need_if = db::connection('mysql_new')
+              ->table('equipment_plan_deliveries')
               ->where('need_if', 1)
               ->update([
                 'need_if' => 0,
@@ -319,7 +321,8 @@ class MasterController extends Controller
         DB::beginTransaction();
         try {
             // for ($i = 0; $i < count($po_detail); $i++) {
-                $insert = DB::table('equipment_plan_deliveries')
+                $insert = DB::connection('mysql_new')
+                ->table('equipment_plan_deliveries')
                 ->insert([
                   'need_if' => 0,
                   'id' => $po_detail['id'],
