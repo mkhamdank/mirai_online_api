@@ -287,7 +287,7 @@ class MasterController extends Controller
         public function fetchEQDelivery(Request $request)
         {
 
-            $need_if = db::::connection('mysql_new')
+            $need_if = db::connection('mysql_new')
             ->table('equipment_plan_deliveries')
             ->where('need_if', 1)
             ->get();
