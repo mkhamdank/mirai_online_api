@@ -279,10 +279,25 @@ class MasterController extends Controller
 
         public function getWPOS()
         {
-            $wpos = db::connection('mysql_new')->select("SELECT * from wpos_logs where deleted_at is null");
+            try {
+              $wpos = db::connection('mysql_new')
+               ->table('wpos_logs')
+               ->get();
+
+              // $wpos = db::connection('mysql_new')->select("SELECT * from wpos_logs where deleted_at is null");
+
+              $status = 200;
+              $response = $wpos;
+              return response()->json($response, $status);
+
+              } catch (\Exception$e) {
+                  $status = 401;
+                  $response = [
+                    'error' => $e->getMessage(),
+                ];
+                return response()->json($response, $status);
+            }
         }
-
-
 
         public function fetchEQDelivery(Request $request)
         {
