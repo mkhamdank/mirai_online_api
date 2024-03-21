@@ -375,7 +375,7 @@ class MasterController extends Controller
 
         DB::beginTransaction();
         try {
-          $insert = DB::table('qr_code_generators')
+          $insert = DB::connection('mysql_new')->table('qr_code_generators')
             ->insert([
               'base64_file' => $email[0]['base64_file'],
               'path_file' => $email[0]['path_file'],
