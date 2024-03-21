@@ -34,3 +34,5 @@ Route::middleware('auth:sanctum')->get('/get_wpos', 'App\Http\Controllers\Master
 //EQ
 Route::middleware('auth:sanctum')->get('/fetch/sync_equipment_delivery', 'App\Http\Controllers\MasterController@fetchEQDelivery');
 Route::middleware('auth:sanctum')->post('/insert/sync_equipment_delivery', 'App\Http\Controllers\MasterController@insertEQDelivery');
+
+Route::middleware('auth:sanctum')->post('/input/qr_code', 'App\Http\Controllers\MasterController@inputQrCode');

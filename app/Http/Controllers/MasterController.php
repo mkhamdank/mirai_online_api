@@ -369,4 +369,39 @@ class MasterController extends Controller
 
     }
 
+    public function inputQrCode(Request $request)
+      {
+        $email = $request->all();
+
+        DB::beginTransaction();
+        try {
+          $insert = DB::table('qr_code_generators')
+            ->insert([
+              'base64_file' => $email[0]['base64_file'],
+              'path_file' => $email[0]['path_file'],
+              'purpose' => $email[0]['purpose'],
+              'remark' => $email[0]['remark'],
+              'id_gen' => $email[0]['id_gen'],
+              'code' => $email[0]['code'],
+              'created_by' => $email[0]['created_by'],
+              'created_at' => $email[0]['created_at'],
+              'updated_at' => $email[0]['updated_at'],
+            ]);
+
+          $filedecode = base64_decode($email[0]['base64_file']);
+            file_put_contents(public_path('images/qrcode/qrcode'.$email[0]['code'].'.png'),$filedecode);
+        } catch (\Exception$e) {
+          DB::rollback();
+          $status = 401;
+          $response = [
+            'error' => $e->getMessage(),
+          ];
+          return response()->json($response, $status);
+        }
+
+        DB::commit();
+        $status = 200;
+        return response()->json($status);
+      }
+
 }
