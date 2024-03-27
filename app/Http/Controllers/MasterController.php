@@ -389,7 +389,7 @@ class MasterController extends Controller
             ]);
 
           $filedecode = base64_decode($email[0]['base64_file']);
-            file_put_contents(public_path('images/qrcode/qrcode'.$email[0]['code'].'.png'),$filedecode);
+            file_put_contents(public_path($email[0]['path_file']),$filedecode);
         } catch (\Exception$e) {
           DB::rollback();
           $status = 401;
