@@ -412,7 +412,7 @@ class MasterController extends Controller
             ->get();
 
             for ($i=0; $i < count($qr_code); $i++) { 
-                $update_qr_code = db::table('qr_code_generators')
+                $update_qr_code = DB::connection('mysql_new')->table('qr_code_generators')
                 ->where('id',$qr_code[$i]->id)
                 ->update([
                     'synced' => date('Y-m-d H:i:s'),
@@ -423,7 +423,7 @@ class MasterController extends Controller
             $driver_log = DB::connection('mysql_new')->table('driver_control_logs')->get();
 
             for ($i=0; $i < count($driver_log); $i++) { 
-                $update_driver_log = db::table('driver_control_logs')
+                $update_driver_log = DB::connection('mysql_new')->table('driver_control_logs')
                 ->where('id',$driver_log[$i]->id)
                 ->update([
                     'synced' => date('Y-m-d H:i:s'),
