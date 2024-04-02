@@ -36,3 +36,4 @@ Route::middleware('auth:sanctum')->get('/fetch/sync_equipment_delivery', 'App\Ht
 Route::middleware('auth:sanctum')->post('/insert/sync_equipment_delivery', 'App\Http\Controllers\MasterController@insertEQDelivery');
 
 Route::middleware('auth:sanctum')->post('/input/qr_code', 'App\Http\Controllers\MasterController@inputQrCode');
+Route::middleware('auth:sanctum')->get('/fetch/driver_log', 'App\Http\Controllers\MasterController@fetchDriverLog');

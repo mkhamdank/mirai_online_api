@@ -404,4 +404,39 @@ class MasterController extends Controller
         return response()->json($status);
       }
 
+      public function fetchDriverLog()
+      {
+          $qr_code = db::table('qr_code_generators')
+            ->where('synced',null)
+            ->where('remark','NOT LIKE',"%regular%")
+            ->get();
+
+            for ($i=0; $i < count($qr_code); $i++) { 
+                $update_qr_code = db::table('qr_code_generators')
+                ->where('id',$qr_code[$i]->id)
+                ->update([
+                    'synced' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            $driver_log = DB::table('driver_control_logs')->get();
+
+            for ($i=0; $i < count($driver_log); $i++) { 
+                $update_driver_log = db::table('driver_control_logs')
+                ->where('id',$driver_log[$i]->id)
+                ->update([
+                    'synced' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            $response = array(
+                'status' => true,
+                'qr_code' => $qr_code,
+                'driver_log' => $driver_log,
+            );
+            return Response::json($response);
+      }
+
 }
