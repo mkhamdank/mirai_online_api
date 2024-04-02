@@ -406,7 +406,7 @@ class MasterController extends Controller
 
       public function fetchDriverLog()
       {
-          $qr_code = db::table('qr_code_generators')
+          $qr_code = DB::connection('mysql_new')->table('qr_code_generators')
             ->where('synced',null)
             ->where('remark','NOT LIKE',"%regular%")
             ->get();
@@ -420,7 +420,7 @@ class MasterController extends Controller
                 ]);
             }
 
-            $driver_log = DB::table('driver_control_logs')->get();
+            $driver_log = DB::connection('mysql_new')->table('driver_control_logs')->get();
 
             for ($i=0; $i < count($driver_log); $i++) { 
                 $update_driver_log = db::table('driver_control_logs')
