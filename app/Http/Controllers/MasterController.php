@@ -445,4 +445,39 @@ class MasterController extends Controller
             return Response::json($response);
       }
 
+      public function getAttendance(Request $request)
+      {
+
+        $attendance = db::table('attendances')
+        ->where('synced', null)
+        ->get();
+
+        try {
+          if (count($attendance) > 0) {
+            for ($i=0; $i < count($attendance); $i++) { 
+              $update = DB::table('attendances')->where('id',$attendance[$i]->id)->update([
+                'synced' => 1,
+                'updated_at' => date('Y-m-d H:i:s')
+              ]);
+            }
+            $status = 200;
+            $response = $attendance;
+            return response()->json($response, $status);
+          }else{
+            $status = 200;
+            $response = $attendance;
+            return response()->json($response, $status);
+          }
+
+        } catch (\Exception$e) {
+          $status = 401;
+          $response = [
+            'error' => $e->getMessage(),
+          ];
+          return response()->json($response, $status);
+
+        }
+
+      }
+
 }
