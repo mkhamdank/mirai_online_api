@@ -448,14 +448,14 @@ class MasterController extends Controller
       public function getAttendance(Request $request)
       {
 
-        $attendance = db::table('attendances')
+        $attendance = DB::connection('mysql_new')->table('attendances')
         ->where('synced', null)
         ->get();
 
         try {
           if (count($attendance) > 0) {
             for ($i=0; $i < count($attendance); $i++) { 
-              $update = DB::table('attendances')->where('id',$attendance[$i]->id)->update([
+              $update = DB::connection('mysql_new')->table('attendances')->where('id',$attendance[$i]->id)->update([
                 'synced' => 1,
                 'updated_at' => date('Y-m-d H:i:s')
               ]);
