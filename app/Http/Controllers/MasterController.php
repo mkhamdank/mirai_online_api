@@ -480,4 +480,27 @@ class MasterController extends Controller
 
       }
 
+      public function syncFixedAsset()
+    {
+        try {
+            $fa_check = db::connection('mysql_new')->select("SELECT * from fixed_asset_checks where sync_at is null");
+
+            db::connection('mysql_new')->table('fixed_asset_checks')->whereNull('sync_at')
+            ->update(['sync_at' => date('Y-m-d H:i:s')]);
+
+            $response = array(
+                'status' => true,
+                'fa_check' => $fa_check
+                'sync_at' => date('Y-m-d H:i:s'),
+            );
+
+            db::connection('mysql_new')->table('fixed_asset_checks')->whereNull('sync_at')
+            ->update(['sync_at' => date('Y-m-d H:i:s')]);
+            return Response::json($response);
+        } catch (Exception $e) {
+            
+        }
+        
+    }
+
 }
