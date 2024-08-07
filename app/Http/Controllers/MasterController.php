@@ -490,7 +490,7 @@ class MasterController extends Controller
 
             $response = array(
                 'status' => true,
-                'fa_check' => $fa_check
+                'fa_check' => $fa_check,
                 'sync_at' => date('Y-m-d H:i:s'),
             );
 
