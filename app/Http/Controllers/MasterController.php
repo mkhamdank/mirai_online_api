@@ -505,14 +505,13 @@ class MasterController extends Controller
 
     public function insertFixedAsset(Request $req)
     {
-        dd($req->all());
         try { 
-              DB::connection('mysql_new')->table('fixed_asset_checks')->where('period', '2024')->update([
-                // 'synced' => 1,
+              $upd = DB::connection('mysql_new')->table('fixed_asset_checks')->where('period', $req->get('period'))->where('location', $req->get('location'))->update([
+                'synced' => 1,
                 'updated_at' => date('Y-m-d H:i:s')
               ]);
             $status = 200;
-            $response = $attendance;
+            $response = $req->all();
             return response()->json($response, $status);
 
         } catch (\Exception$e) {
