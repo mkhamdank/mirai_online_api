@@ -507,7 +507,7 @@ class MasterController extends Controller
     {
         try { 
               $upd = DB::connection('mysql_new')->table('fixed_asset_checks')->where('period', $req->get('period'))->where('location', $req->get('location'))->update([
-                'synced' => 1,
+                // 'synced' => 1,
                 'updated_at' => date('Y-m-d H:i:s')
               ]);
             $status = 200;
