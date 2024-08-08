@@ -503,4 +503,26 @@ class MasterController extends Controller
         
     }
 
+    public function insertFixedAsset(Request $req)
+    {
+        dd($req->all());
+        try { 
+              DB::connection('mysql_new')->table('fixed_asset_checks')->where('period', '2024')->update([
+                // 'synced' => 1,
+                'updated_at' => date('Y-m-d H:i:s')
+              ]);
+            $status = 200;
+            $response = $attendance;
+            return response()->json($response, $status);
+
+        } catch (\Exception$e) {
+          $status = 401;
+          $response = [
+            'error' => $e->getMessage(),
+          ];
+          return response()->json($response, $status);
+
+        }
+    }
+
 }
