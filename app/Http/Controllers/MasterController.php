@@ -506,8 +506,10 @@ class MasterController extends Controller
     public function insertFixedAsset(Request $req)
     {
         try { 
-              $upd = DB::connection('mysql_new')->table('fixed_asset_checks')->where('period', $req->get('period'))->where('location', $req->get('location'))->update([
-                // 'synced' => 1,
+              DB::connection('mysql_new')->table('fixed_asset_checks')->where('period', $req->get('period'))->where('location', $req->get('location'))->update([
+                'appr_manager_by' => $req->get('appr_manager_by'),
+                'appr_manager_at' => date('Y-m-d H:i:s'),
+                'appr_status' => 'send',
                 'updated_at' => date('Y-m-d H:i:s')
               ]);
             $status = 200;
