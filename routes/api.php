@@ -42,3 +42,4 @@ Route::middleware('auth:sanctum')->get('/fetch/attendance', 'App\Http\Controller
 // FA
 Route::middleware('auth:sanctum')->get('/fetch/sync_fixed_asset', 'App\Http\Controllers\MasterController@syncFixedAsset');
 Route::middleware('auth:sanctum')->post('/insert/approval_fixed_asset', 'App\Http\Controllers\MasterController@insertFixedAsset');
+Route::middleware('auth:sanctum')->post('/insert/fixed_asset', 'App\Http\Controllers\MasterController@AddFixedAsset');
