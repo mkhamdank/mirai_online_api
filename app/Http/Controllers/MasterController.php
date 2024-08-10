@@ -485,12 +485,18 @@ class MasterController extends Controller
         try {
             $fa_check = db::connection('mysql_new')->select("SELECT * from fixed_asset_checks where sync_at is null");
 
+            $fa_audit = db::connection('mysql_new')->select("SELECT * from fixed_asset_audits where sync_at is null");
+
             db::connection('mysql_new')->table('fixed_asset_checks')->whereNull('sync_at')
+            ->update(['sync_at' => date('Y-m-d H:i:s')]);
+
+            db::connection('mysql_new')->table('fixed_asset_audits')->whereNull('sync_at')
             ->update(['sync_at' => date('Y-m-d H:i:s')]);
 
             $response = array(
                 'status' => true,
                 'fa_check' => $fa_check,
+                'fa_audit' => $fa_audit,
                 'sync_at' => date('Y-m-d H:i:s'),
             );
 
