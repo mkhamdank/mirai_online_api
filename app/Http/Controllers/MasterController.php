@@ -535,12 +535,51 @@ class MasterController extends Controller
     public function AddFixedAsset(Request $req)
     {
         try { 
-          // DB::connection('mysql_new')->table('fixed_asset_checks')->where('period', $req->get('period'))->where('location', $req->get('location'))->update([
-          //   'appr_manager_by' => $req->get('appr_manager_by'),
-          //   'appr_manager_at' => date('Y-m-d H:i:s'),
-          //   'appr_status' => 'send',
-          //   'updated_at' => date('Y-m-d H:i:s')
-          // ]);
+            if (count($req->get('cek_asset')) > 0 ) {
+                foreach ($req->get('cek_asset') as $key => $value) {
+                   DB::connection('mysql_new')->table('fixed_asset_checks')
+                   ->updateOrInsert([
+                    'period' => $value['period'],
+                    'sap_number' => $value['sap_number'],
+                   ],[
+                    'period' => $value->period,
+                    'sap_number' => $value->sap_number,
+                    'asset_name' => $value->fixed_asset_name,
+                    'category' => $value->remark,
+                    'location' => $value->location,
+                    'asset_section' => $value->section,
+                    'asset_images' => $value->picture,
+                    'pic' => $value->pic,
+                    'status' => $value->status,
+                    'audit_type' => $value->audit_type,
+                    'created_by' => $value->created_by,
+                   ]); 
+                }
+            }
+
+            if (count($req->get('audit_asset')) > 0 ) {
+                foreach ($req->get('audit_asset') as $key => $value) {
+                   DB::connection('mysql_new')->table('fixed_asset_audits')
+                   ->updateOrInsert([
+                    'period' => $value['period'],
+                    'sap_number' => $value['sap_number'],
+                   ],[
+                    'period' => $value->period,
+                    'sap_number' => $value->sap_number,
+                    'asset_name' => $value->fixed_asset_name,
+                    'category' => $value->remark,
+                    'location' => $value->location,
+                    'asset_section' => $value->section,
+                    'asset_images' => $value->picture,
+                    'pic' => $value->pic,
+                    'status' => $value->status,
+                    'audit_type' => $value->audit_type,
+                    'checked_by' => $value->checked_by,
+                    'created_by' => $value->created_by,
+                   ]); 
+                }
+            }
+          
         $status = 200;
         $response = $req->all();
         return response()->json($response, $status);
