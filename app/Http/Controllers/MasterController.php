@@ -553,6 +553,8 @@ class MasterController extends Controller
                     'status' => $value['status'],
                     'audit_type' => $value['audit_type'],
                     'created_by' => $value['created_by'],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                    ]); 
                 }
             }
@@ -576,6 +578,8 @@ class MasterController extends Controller
                     'audit_type' => $value['audit_type'],
                     'checked_by' => $value['checked_by'],
                     'created_by' => $value['created_by'],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                    ]); 
                 }
             }
