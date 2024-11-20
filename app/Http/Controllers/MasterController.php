@@ -433,11 +433,12 @@ class MasterController extends Controller
                 'destination' => $email[0]['destination'],
                 'plat_no' => $email[0]['plat_no'],
                 'car' => $email[0]['car'],
-              'created_by' => $email[0]['created_by'],
+                'created_by_id' => $email[0]['created_by_id'],
+                'created_by_name' => $email[0]['created_by_name'],
               'created_at' => $email[0]['created_at'],
               'updated_at' => $email[0]['updated_at'],
             ]);
-            
+
         } catch (\Exception$e) {
           DB::rollback();
           $status = 401;
