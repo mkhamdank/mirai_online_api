@@ -39,6 +39,8 @@ Route::middleware('auth:sanctum')->post('/input/qr_code', 'App\Http\Controllers\
 Route::middleware('auth:sanctum')->get('/fetch/driver_log', 'App\Http\Controllers\MasterController@fetchDriverLog');
 Route::middleware('auth:sanctum')->get('/fetch/attendance', 'App\Http\Controllers\MasterController@getAttendance');
 
+Route::middleware('auth:sanctum')->post('/input/driver_task', 'App\Http\Controllers\MasterController@inputDriverTask');
+
 // FA
 Route::middleware('auth:sanctum')->get('/fetch/sync_fixed_asset', 'App\Http\Controllers\MasterController@syncFixedAsset');
 Route::middleware('auth:sanctum')->post('/insert/approval_fixed_asset', 'App\Http\Controllers\MasterController@insertFixedAsset');

@@ -54,6 +54,7 @@ class MasterController extends Controller
             'outgoing_recheck' => $outgoing_recheck,
             'sync_at' => date('Y-m-d H:i:s'),
         );
+        
         return Response::json($response);
 
     }
@@ -400,6 +401,43 @@ class MasterController extends Controller
 
           $filedecode = base64_decode($email[0]['base64_file']);
             file_put_contents(public_path('images/qrcode/driver/qrcode'.$email[0]['code'].'.png'),$filedecode);
+        } catch (\Exception$e) {
+          DB::rollback();
+          $status = 401;
+          $response = [
+            'error' => $e->getMessage(),
+          ];
+          return response()->json($response, $status);
+        }
+
+        DB::commit();
+        $status = 200;
+        return response()->json($status);
+      }
+
+      public function inputDriverTask(Request $request)
+      {
+        $email = $request->all();
+
+        DB::beginTransaction();
+        try {
+          $insert = DB::connection('mysql_new')->table('driver_tasks')
+            ->insert([
+              'task_id' => $email[0]['task_id'],
+                'date_from' => $email[0]['date_from'],
+                'date_to' => $email[0]['date_to'],
+                'created_by_id' => $email[0]['created_by_id'],
+                'created_by_name' => $email[0]['created_by_name'],
+                'driver_id' => $email[0]['driver_id'],
+                'driver_name' => $email[0]['driver_name'],
+                'destination' => $email[0]['destination'],
+                'plat_no' => $email[0]['plat_no'],
+                'car' => $email[0]['car'],
+              'created_by' => $email[0]['created_by'],
+              'created_at' => $email[0]['created_at'],
+              'updated_at' => $email[0]['updated_at'],
+            ]);
+            
         } catch (\Exception$e) {
           DB::rollback();
           $status = 401;
