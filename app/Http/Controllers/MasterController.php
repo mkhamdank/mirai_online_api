@@ -455,25 +455,38 @@ class MasterController extends Controller
 
       public function fetchDriverLog()
       {
-          $qr_code = DB::connection('mysql_new')->table('qr_code_generators')
+            // $qr_code = DB::connection('mysql_new')->table('qr_code_generators')
+            // ->where('synced',null)
+            // ->where('remark','NOT LIKE',"%regular%")
+            // ->get();
+
+            // for ($i=0; $i < count($qr_code); $i++) { 
+            //     $update_qr_code = DB::connection('mysql_new')->table('qr_code_generators')
+            //     ->where('id',$qr_code[$i]->id)
+            //     ->update([
+            //         'synced' => date('Y-m-d H:i:s'),
+            //         'updated_at' => date('Y-m-d H:i:s'),
+            //     ]);
+            // }
+
+            // $driver_log = DB::connection('mysql_new')->table('driver_control_logs')->get();
+
+            // for ($i=0; $i < count($driver_log); $i++) { 
+            //     $update_driver_log = DB::connection('mysql_new')->table('driver_control_logs')
+            //     ->where('id',$driver_log[$i]->id)
+            //     ->update([
+            //         'synced' => date('Y-m-d H:i:s'),
+            //         'updated_at' => date('Y-m-d H:i:s'),
+            //     ]);
+            // }
+
+            $driver_task = DB::connection('mysql_new')->table('driver_tasks')
             ->where('synced',null)
-            ->where('remark','NOT LIKE',"%regular%")
             ->get();
 
-            for ($i=0; $i < count($qr_code); $i++) { 
-                $update_qr_code = DB::connection('mysql_new')->table('qr_code_generators')
-                ->where('id',$qr_code[$i]->id)
-                ->update([
-                    'synced' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ]);
-            }
-
-            $driver_log = DB::connection('mysql_new')->table('driver_control_logs')->get();
-
-            for ($i=0; $i < count($driver_log); $i++) { 
-                $update_driver_log = DB::connection('mysql_new')->table('driver_control_logs')
-                ->where('id',$driver_log[$i]->id)
+            for ($i=0; $i < count($driver_task); $i++) { 
+                $update_driver_task = DB::connection('mysql_new')->table('driver_tasks')
+                ->where('id',$driver_task[$i]->id)
                 ->update([
                     'synced' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
@@ -482,8 +495,7 @@ class MasterController extends Controller
 
             $response = array(
                 'status' => true,
-                'qr_code' => $qr_code,
-                'driver_log' => $driver_log,
+                'driver_task' => $driver_task,
             );
             return Response::json($response);
       }
