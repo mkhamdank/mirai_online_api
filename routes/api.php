@@ -39,6 +39,8 @@ Route::middleware('auth:sanctum')->post('/input/qr_code', 'App\Http\Controllers\
 Route::middleware('auth:sanctum')->get('/fetch/driver_log', 'App\Http\Controllers\MasterController@fetchDriverLog');
 Route::middleware('auth:sanctum')->get('/fetch/attendance', 'App\Http\Controllers\MasterController@getAttendance');
 
+Route::middleware('auth:sanctum')->post('/delete/driver_task/{task_id}', 'App\Http\Controllers\MasterController@deleteDriverTask');
+
 Route::middleware('auth:sanctum')->post('/input/driver_task', 'App\Http\Controllers\MasterController@inputDriverTask');
 
 // FA

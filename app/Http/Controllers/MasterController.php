@@ -500,6 +500,25 @@ class MasterController extends Controller
             return Response::json($response);
       }
 
+      public function deleteDriverTask($task_id)
+      {
+
+            $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+            ->where('task_id',$task_id)
+            ->first();
+
+            if ($driver_task) {
+                $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+                ->where('task_id',$task_id)
+                ->delete();
+            }
+
+            $response = array(
+                'status' => true,
+            );
+            return Response::json($response);
+      }
+
       public function getAttendance(Request $request)
       {
 
