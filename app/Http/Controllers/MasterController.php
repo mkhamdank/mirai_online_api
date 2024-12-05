@@ -482,15 +482,16 @@ class MasterController extends Controller
 
             $driver_task = DB::connection('mysql_new')->table('driver_tasks')
             ->where('synced',null)
+            ->where('times','!=',null)
             ->get();
 
             for ($i=0; $i < count($driver_task); $i++) { 
-                $update_driver_task = DB::connection('mysql_new')->table('driver_tasks')
-                ->where('id',$driver_task[$i]->id)
-                ->update([
-                    'synced' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ]);
+                // $update_driver_task = DB::connection('mysql_new')->table('driver_tasks')
+                // ->where('id',$driver_task[$i]->id)
+                // ->update([
+                //     'synced' => date('Y-m-d H:i:s'),
+                //     'updated_at' => date('Y-m-d H:i:s'),
+                // ]);
             }
 
             $response = array(
