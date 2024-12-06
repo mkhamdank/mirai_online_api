@@ -494,6 +494,20 @@ class MasterController extends Controller
                 ]);
             }
 
+            $driver_task_before = DB::connection('mysql_new')->table('driver_tasks')
+            ->where('synced','!=',null)
+            ->where(DB::RAW('DATE_FORMAT(date_from,"%Y-%m-%d")'),'<',date('Y-m-d'))
+            ->get();
+
+            if (count($driver_task_before)) {
+                $driver_task_before = DB::connection('mysql_new')->table('driver_tasks')
+                ->where('synced','!=',null)
+                ->where(DB::RAW('DATE_FORMAT(date_from,"%Y-%m-%d")'),'<',date('Y-m-d'))
+                ->update([
+                    'deleted_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+
             $response = array(
                 'status' => true,
                 'driver_task' => $driver_task,
