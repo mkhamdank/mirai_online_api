@@ -763,10 +763,11 @@ class MasterController extends Controller
 
         $plan_delivery = $request->all();
 
-        DB::beginTransaction();
+        DB::connection('mysql_new')->beginTransaction();
         try {
             for ($i = 0; $i < count($plan_delivery); $i++) {
-                $insert = DB::table('material_plan_deliveries')
+                $insert = DB::connection('mysql_new')
+                    ->table('material_plan_deliveries')
                     ->insert([
                         'id' => $plan_delivery[$i]['id'],
                         'need_if' => 0,
@@ -786,7 +787,7 @@ class MasterController extends Controller
             }
 
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::connection('mysql_new')->rollback();
             $status = 401;
             $response = [
                 'error' => $e->getMessage() . ' line ' . $e->getLine(),
@@ -794,7 +795,7 @@ class MasterController extends Controller
             return response()->json($response, $status);
         }
 
-        DB::commit();
+        DB::connection('mysql_new')->commit();
         $status = 200;
         return response()->json($status);
 
@@ -803,13 +804,15 @@ class MasterController extends Controller
     public function getSyncPlanDelivery(Request $request)
     {
 
-        $need_if = db::table('material_plan_deliveries')
+        $need_if = DB::connection('mysql_new')
+            ->table('material_plan_deliveries')
             ->where('need_if', 1)
             ->get();
 
         try {
 
-            $update_need_if = db::table('material_plan_deliveries')
+            $update_need_if = db::connection('mysql_new')
+                ->table('material_plan_deliveries')
                 ->where('need_if', 1)
                 ->update([
                     'need_if' => 0,
@@ -835,16 +838,18 @@ class MasterController extends Controller
 
         $vendor_mails = $request->all();
 
-        DB::beginTransaction();
+        DB::connection('mysql_new')->beginTransaction();
         try {
 
-            db::table('vendor_mails')
+            db::connection('mysql_new')
+                ->table('vendor_mails')
                 ->where('vendor_code', $vendor_mails[0]['vendor_code'])
                 ->delete();
 
             $insert_data = [];
             for ($i = 0; $i < count($vendor_mails); $i++) {
-                db::table('vendor_mails')
+                db::connection('mysql_new')
+                    ->table('vendor_mails')
                     ->insert([
                         'vendor_code' => $vendor_mails[$i]['vendor_code'],
                         'name' => $vendor_mails[$i]['name'],
@@ -858,7 +863,7 @@ class MasterController extends Controller
             }
 
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::connection('mysql_new')->rollback();
             $status = 401;
             $response = [
                 'error' => $e->getMessage() . ' line ' . $e->getLine(),
@@ -866,7 +871,7 @@ class MasterController extends Controller
             return response()->json($response, $status);
         }
 
-        DB::commit();
+        DB::connection('mysql_new')->commit();
         $status = 200;
         return response()->json($status);
 
