@@ -830,4 +830,46 @@ class MasterController extends Controller
 
     }
 
+    public function insertVendorMail(Request $request)
+    {
+
+        $vendor_mails = $request->all();
+
+        DB::beginTransaction();
+        try {
+
+            db::table('vendor_mails')
+                ->where('vendor_code', $vendor_mails[0]['vendor_code'])
+                ->delete();
+
+            $insert_data = [];
+            for ($i = 0; $i < count($vendor_mails); $i++) {
+                db::table('vendor_mails')
+                    ->insert([
+                        'vendor_code' => $vendor_mails[$i]['vendor_code'],
+                        'name' => $vendor_mails[$i]['name'],
+                        'email' => $vendor_mails[$i]['email'],
+                        'remark' => $vendor_mails[$i]['remark'],
+                        'vendor_name' => $vendor_mails[$i]['vendor_name'],
+                        'created_by' => 1,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    ]);
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage() . ' line ' . $e->getLine(),
+            ];
+            return response()->json($response, $status);
+        }
+
+        DB::commit();
+        $status = 200;
+        return response()->json($status);
+
+    }
+
 }
