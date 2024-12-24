@@ -921,7 +921,6 @@ class MasterController extends Controller
                         'updated_at' => $material_controls[$i]['updated_at'],
                         'created_at' => $material_controls[$i]['created_at'],
                     ]);
-
             }
 
         } catch (\Exception $e) {
