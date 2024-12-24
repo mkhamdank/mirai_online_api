@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->get('/post_data_molding', 'App\Http\Controlle
 Route::middleware('auth:sanctum')->post('/insert/plan_delivery', 'App\Http\Controllers\MasterController@insertPlanDelivery');
 Route::middleware('auth:sanctum')->get('/fetch/sync_plan_delivery', 'App\Http\Controllers\MasterController@getSyncPlanDelivery');
 Route::middleware('auth:sanctum')->post('/insert/vendor_mail', 'App\Http\Controllers\MasterController@insertVendorMail');
+Route::middleware('auth:sanctum')->post('/update/raw_material_control', 'App\Http\Controllers\MasterController@updateRawMaterialControl');
 
 //WPOS
 Route::middleware('auth:sanctum')->get('/get_wpos', 'App\Http\Controllers\MasterController@getWPOS');

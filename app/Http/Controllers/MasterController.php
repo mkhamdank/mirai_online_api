@@ -877,4 +877,66 @@ class MasterController extends Controller
 
     }
 
+    public function updateRawMaterialControl(Request $request)
+    {
+
+        $material_controls = $request->all();
+
+        DB::connection('mysql_new')->beginTransaction();
+        try {
+            for ($i = 0; $i < count($material_controls); $i++) {
+                DB::connection('mysql_new')
+                    ->table('material_controls')
+                    ->where('id', $material_controls[$i]['id'])
+                    ->delete();
+
+                DB::connection('mysql_new')
+                    ->table('material_controls')
+                    ->insert([
+                        'id' => $material_controls[$i]['id'],
+                        'material_number' => $material_controls[$i]['material_number'],
+                        'material_description' => $material_controls[$i]['material_description'],
+                        'purchasing_group' => $material_controls[$i]['purchasing_group'],
+                        'controlling_group' => $material_controls[$i]['controlling_group'],
+                        'vendor_code' => $material_controls[$i]['vendor_code'],
+                        'vendor_name' => $material_controls[$i]['vendor_name'],
+                        'vendor_shortname' => $material_controls[$i]['vendor_shortname'],
+                        'category' => $material_controls[$i]['category'],
+                        'pic' => $material_controls[$i]['pic'],
+                        'control' => $material_controls[$i]['control'],
+                        'remark' => $material_controls[$i]['remark'],
+                        'multiple_order' => $material_controls[$i]['multiple_order'],
+                        'minimum_order' => $material_controls[$i]['minimum_order'],
+                        'sample_qty' => $material_controls[$i]['sample_qty'],
+                        'lead_time' => $material_controls[$i]['lead_time'],
+                        'urgent_lead_time' => $material_controls[$i]['urgent_lead_time'],
+                        'dts' => $material_controls[$i]['dts'],
+                        'round' => $material_controls[$i]['round'],
+                        'first_reminder' => $material_controls[$i]['first_reminder'],
+                        'second_reminder' => $material_controls[$i]['second_reminder'],
+                        'material_category' => $material_controls[$i]['material_category'],
+                        'location' => $material_controls[$i]['location'],
+                        'incoming' => $material_controls[$i]['incoming'],
+                        'created_by' => $material_controls[$i]['created_by'],
+                        'updated_at' => $material_controls[$i]['updated_at'],
+                        'created_at' => $material_controls[$i]['created_at'],
+                    ]);
+
+            }
+
+        } catch (\Exception $e) {
+            DB::connection('mysql_new')->rollback();
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage() . ' line ' . $e->getLine(),
+            ];
+            return response()->json($response, $status);
+        }
+
+        DB::connection('mysql_new')->commit();
+        $status = 200;
+        return response()->json($status);
+
+    }
+
 }
