@@ -284,13 +284,28 @@ class MasterController extends Controller
         try {
             $wpos = db::connection('mysql_new')
                 ->table('wpos_logs')
+                ->orderBy('id','desc')
+                ->whereNull('deleted_at')
                 ->get();
+
+            $wpos_approvers = db::connection('mysql_new')
+            ->table('wpos_approvals')
+            ->orderBy('id','desc')
+            ->whereNull('deleted_at')
+            ->get();
 
             // $wpos = db::connection('mysql_new')->select("SELECT * from wpos_logs where deleted_at is null");
 
             $status = 200;
-            $response = $wpos;
+
+            $response = array(
+                'status' => true,
+                'wpos' => $wpos,
+                'wpos_approvers' => $wpos_approvers,
+
+            );
             return response()->json($response, $status);
+
 
         } catch (\Exception $e) {
             $status = 401;
@@ -309,29 +324,20 @@ class MasterController extends Controller
                 ->where('id', $request->get('id'))
                 ->first();
 
-            $status = 200;
-            $response = $wpos;
-            return response()->json($response, $status);
-
-        } catch (\Exception $e) {
-            $status = 401;
-            $response = [
-                'error' => $e->getMessage(),
-            ];
-            return response()->json($response, $status);
-        }
-    }
-
-    public function getWPOSApproval(Request $request)
-    {
-        try {
-            $wpos_approval = db::connection('mysql_new')
+            $wpos_approvers = db::connection('mysql_new')
                 ->table('wpos_approvals')
                 ->where('wpos_id', $request->get('id'))
+                ->whereNull('approved_at')
                 ->get();
 
             $status = 200;
-            $response = $wpos_approval;
+            
+            $response = array(
+                'status' => true,
+                'wpos' => $wpos,
+                'wpos_approvers' => $wpos_approvers
+            );
+
             return response()->json($response, $status);
 
         } catch (\Exception $e) {
@@ -342,6 +348,7 @@ class MasterController extends Controller
             return response()->json($response, $status);
         }
     }
+
 
     public function postWPOSApproval(Request $request)
     {
@@ -355,8 +362,8 @@ class MasterController extends Controller
                 ->where('wpos_id', $data[0]['id'])
                 ->where('department', $data[0]['dept'])
                 ->update([
-                    'approver_id' => $data[0]['user'],
-                    'approver_name' => $data[0]['name'],
+                    'real_approver_id' => $data[0]['user'],
+                    'real_approver_name' => $data[0]['name'],
                     'status' => $data[0]['status'],
                     'reason' => $data[0]['reason'],
                     'approved_at' => date('Y-m-d H:i:s'),

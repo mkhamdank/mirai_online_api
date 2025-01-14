@@ -37,7 +37,6 @@ Route::middleware('auth:sanctum')->post('/update/raw_material_control', 'App\Htt
 //WPOS
 Route::middleware('auth:sanctum')->get('/get_wpos', 'App\Http\Controllers\MasterController@getWPOS');
 Route::middleware('auth:sanctum')->post('/get_wpos_id', 'App\Http\Controllers\MasterController@getWPOSId');
-Route::middleware('auth:sanctum')->post('/get_wpos_approval', 'App\Http\Controllers\MasterController@getWPOSApproval');
 Route::middleware('auth:sanctum')->post('/post_wpos_approval', 'App\Http\Controllers\MasterController@postWPOSApproval');
 
 //EQ
