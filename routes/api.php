@@ -55,3 +55,5 @@ Route::middleware('auth:sanctum')->post('/input/driver_task', 'App\Http\Controll
 Route::middleware('auth:sanctum')->get('/fetch/sync_fixed_asset', 'App\Http\Controllers\MasterController@syncFixedAsset');
 Route::middleware('auth:sanctum')->post('/insert/approval_fixed_asset', 'App\Http\Controllers\MasterController@insertFixedAsset');
 Route::middleware('auth:sanctum')->post('/insert/fixed_asset', 'App\Http\Controllers\MasterController@AddFixedAsset');
+
+Route::middleware('auth:sanctum')->get('/fetch/vendor_gift', 'App\Http\Controllers\MasterController@fetchVendorGift');
