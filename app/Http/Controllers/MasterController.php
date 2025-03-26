@@ -971,4 +971,31 @@ class MasterController extends Controller
         }
     }
 
+    function fetchVendorHoliday()
+    {
+        $vendor_gift = DB::connection('mysql_new')->table('vendor_gifts')
+        ->where('country','ID')
+            ->get();
+
+        try {
+            if (count($vendor_gift) > 0) {
+                $status = 200;
+                $response = $vendor_gift;
+                return response()->json($response, $status);
+            } else {
+                $status = 200;
+                $response = $vendor_gift;
+                return response()->json($response, $status);
+            }
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+
+        }
+    }
+
 }

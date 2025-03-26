@@ -57,3 +57,4 @@ Route::middleware('auth:sanctum')->post('/insert/approval_fixed_asset', 'App\Htt
 Route::middleware('auth:sanctum')->post('/insert/fixed_asset', 'App\Http\Controllers\MasterController@AddFixedAsset');
 
 Route::middleware('auth:sanctum')->get('/fetch/vendor_gift', 'App\Http\Controllers\MasterController@fetchVendorGift');
+Route::middleware('auth:sanctum')->get('/fetch/vendor_holiday', 'App\Http\Controllers\MasterController@fetchVendorHoliday');
