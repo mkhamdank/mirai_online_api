@@ -452,6 +452,36 @@ class MasterController extends Controller
 
     }
 
+
+    public function fetchVendorRegistration(Request $request)
+    {
+
+        $need_if = db::connection('mysql_new')
+            ->table('vendor_registrations')
+            ->where('need_if', 1)
+            ->get();
+
+        try {
+            $update_need_if = db::connection('mysql_new')
+                ->table('vendor_registrations')
+                ->where('need_if', 1)
+                ->update([
+                    'need_if' => 0,
+                ]);
+
+            $status = 200;
+            $response = $need_if;
+            return response()->json($response, $status);
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+    }
+
     public function inputQrCode(Request $request)
     {
         $email = $request->all();

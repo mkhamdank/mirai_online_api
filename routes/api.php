@@ -43,6 +43,9 @@ Route::middleware('auth:sanctum')->post('/post_wpos_approval', 'App\Http\Control
 Route::middleware('auth:sanctum')->get('/fetch/sync_equipment_delivery', 'App\Http\Controllers\MasterController@fetchEQDelivery');
 Route::middleware('auth:sanctum')->post('/insert/sync_equipment_delivery', 'App\Http\Controllers\MasterController@insertEQDelivery');
 
+//Vendor Registration
+Route::middleware('auth:sanctum')->get('/fetch/vendor_registration', 'App\Http\Controllers\MasterController@fetchVendorRegistration');
+
 Route::middleware('auth:sanctum')->post('/input/qr_code', 'App\Http\Controllers\MasterController@inputQrCode');
 Route::middleware('auth:sanctum')->get('/fetch/driver_log', 'App\Http\Controllers\MasterController@fetchDriverLog');
 Route::middleware('auth:sanctum')->get('/fetch/attendance', 'App\Http\Controllers\MasterController@getAttendance');
