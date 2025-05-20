@@ -570,30 +570,6 @@ class MasterController extends Controller
 
     public function fetchDriverLog()
     {
-        // $qr_code = DB::connection('mysql_new')->table('qr_code_generators')
-        // ->where('synced',null)
-        // ->where('remark','NOT LIKE',"%regular%")
-        // ->get();
-
-        // for ($i=0; $i < count($qr_code); $i++) {
-        //     $update_qr_code = DB::connection('mysql_new')->table('qr_code_generators')
-        //     ->where('id',$qr_code[$i]->id)
-        //     ->update([
-        //         'synced' => date('Y-m-d H:i:s'),
-        //         'updated_at' => date('Y-m-d H:i:s'),
-        //     ]);
-        // }
-
-        // $driver_log = DB::connection('mysql_new')->table('driver_control_logs')->get();
-
-        // for ($i=0; $i < count($driver_log); $i++) {
-        //     $update_driver_log = DB::connection('mysql_new')->table('driver_control_logs')
-        //     ->where('id',$driver_log[$i]->id)
-        //     ->update([
-        //         'synced' => date('Y-m-d H:i:s'),
-        //         'updated_at' => date('Y-m-d H:i:s'),
-        //     ]);
-        // }
 
         $driver_task = DB::connection('mysql_new')->table('driver_tasks')
             ->where('synced', null)
@@ -684,6 +660,51 @@ class MasterController extends Controller
 
         }
 
+    }
+
+    public function fetchDriverLogJapanese()
+    {
+
+        $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+            ->where('synced', null)
+            ->where('remark','japanese')
+            ->where(function ($query) {
+                $query->where('closure_status', "japanese")
+                    ->orWhere('closure_status', "closed");
+            })
+            ->get();
+
+        for ($i = 0; $i < count($driver_task); $i++) {
+            $update_driver_task = DB::connection('mysql_new')->table('driver_tasks')
+                ->where('id', $driver_task[$i]->id)
+                ->update([
+                    'closure_status' => 'closed',
+                    'synced' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+        }
+
+        $driver_task_before = DB::connection('mysql_new')->table('driver_tasks')
+            ->where('synced', '!=', null)
+            ->where('remark','japanese')
+            ->where(DB::RAW('DATE_FORMAT(date_from,"%Y-%m-%d")'), '<', date('Y-m-d'))
+            ->get();
+
+        if (count($driver_task_before)) {
+            $driver_task_before = DB::connection('mysql_new')->table('driver_tasks')
+                ->where('synced', '!=', null)
+                ->where('remark','japanese')
+                ->where(DB::RAW('DATE_FORMAT(date_from,"%Y-%m-%d")'), '<', date('Y-m-d'))
+                ->update([
+                    'deleted_at' => date('Y-m-d H:i:s'),
+                ]);
+        }
+
+        $response = array(
+            'status' => true,
+            'driver_task' => $driver_task,
+        );
+        return Response::json($response);
     }
 
     public function syncFixedAsset()
