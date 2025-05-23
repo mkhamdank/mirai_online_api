@@ -1058,4 +1058,40 @@ class MasterController extends Controller
         }
     }
 
+    function fetchPassengerAttendance()
+    {
+        $passenger_attendance = DB::connection('mysql_new')->table('driver_passenger_attendances')
+        ->where('synced',null)
+        ->get();
+
+        for ($i = 0; $i < count($passenger_attendance); $i++) {
+            $update_passenger_attendance = DB::connection('mysql_new')->table('driver_passenger_attendances')
+                ->where('id', $passenger_attendance[$i]->id)
+                ->update([
+                    'synced' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+        }
+
+        try {
+            if (count($passenger_attendance) > 0) {
+                $status = 200;
+                $response = $passenger_attendance;
+                return response()->json($response, $status);
+            } else {
+                $status = 200;
+                $response = $passenger_attendance;
+                return response()->json($response, $status);
+            }
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+
+        }
+    }
+
 }

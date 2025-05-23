@@ -63,3 +63,5 @@ Route::middleware('auth:sanctum')->post('/insert/fixed_asset', 'App\Http\Control
 
 Route::middleware('auth:sanctum')->get('/fetch/vendor_gift', 'App\Http\Controllers\MasterController@fetchVendorGift');
 Route::middleware('auth:sanctum')->get('/fetch/vendor_holiday', 'App\Http\Controllers\MasterController@fetchVendorHoliday');
+
+Route::middleware('auth:sanctum')->get('/fetch/passenger_attendance', 'App\Http\Controllers\MasterController@fetchPassengerAttendance');
