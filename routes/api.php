@@ -65,3 +65,6 @@ Route::middleware('auth:sanctum')->get('/fetch/vendor_gift', 'App\Http\Controlle
 Route::middleware('auth:sanctum')->get('/fetch/vendor_holiday', 'App\Http\Controllers\MasterController@fetchVendorHoliday');
 
 Route::middleware('auth:sanctum')->get('/fetch/passenger_attendance', 'App\Http\Controllers\MasterController@fetchPassengerAttendance');
+
+Route::middleware('auth:sanctum')->post('/input/incoming_log', 'App\Http\Controllers\MasterController@insertIncomingLog');
+Route::middleware('auth:sanctum')->post('/input/incoming_ng_log', 'App\Http\Controllers\MasterController@insertIncomingNGLog');

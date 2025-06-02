@@ -1094,4 +1094,114 @@ class MasterController extends Controller
         }
     }
 
+    function insertIncomingLog(Request $request) {
+        $truncate = DB::
+            table('qa_incoming_logs')
+            ->truncate();
+
+        try {
+            $data = $request->all();
+
+            for ($i=0; $i < count($data); $i++) { 
+                $insert = db::table('qa_incoming_logs')
+                ->insert([
+                    'incoming_check_code' => $data[$i]['incoming_check_code'],
+                    'lot_number' => $data[$i]['lot_number'],
+                    'location' => $data[$i]['location'],
+                    'inspector_id' => $data[$i]['inspector_id'],
+                    'material_number' => $data[$i]['material_number'],
+                    'material_description' => $data[$i]['material_description'],
+                    'vendor' => $data[$i]['vendor'],
+                    'qty_rec' => $data[$i]['qty_rec'],
+                    'qty_check' => $data[$i]['qty_check'],
+                    'invoice' => $data[$i]['invoice'],
+                    'inspection_level' => $data[$i]['inspection_level'],
+                    'repair' => $data[$i]['repair'],
+                    'scrap' => $data[$i]['scrap'],
+                    'return' => $data[$i]['return'],
+                    'total_ok' => $data[$i]['total_ok'],
+                    'total_ng' => $data[$i]['total_ng'],
+                    'ng_ratio' => $data[$i]['ng_ratio'],
+                    'status_lot' => $data[$i]['status_lot'],
+                    'report_evidence' => $data[$i]['report_evidence'],
+                    'send_email_status' => $data[$i]['send_email_status'],
+                    'send_email_at' => $data[$i]['send_email_at'],
+                    'hpl' => $data[$i]['hpl'],
+                    'serial_number' => $data[$i]['serial_number'],
+                    'note_all' => $data[$i]['note_all'],
+                    'remark' => $data[$i]['remark'],
+                    'total_ng_pcs' => $data[$i]['total_ng_pcs'],
+                    'created_by' => $data[$i]['created_by'],
+                    'deleted_at' => $data[$i]['deleted_at'],
+                    'created_at' => $data[$i]['created_at'],
+                    'updated_at' => $data[$i]['updated_at'],
+                    'synced_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            $status = 200;
+            $response = count($data). ' incoming logs inserted successfully.';
+            return response()->json($response, $status);
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage() . ' line ' . $e->getLine(),
+            ];
+            return response()->json($response, $status);
+
+        }
+    }
+
+    function insertIncomingNGLog(Request $request) {
+        $truncate = DB::
+            table('qa_incoming_ng_logs')
+            ->truncate();
+
+        try {
+            $data = $request->all();
+
+            for ($i=0; $i < count($data); $i++) { 
+                $insert = db::table('qa_incoming_ng_logs')
+                ->insert([
+                    'incoming_check_code' => $data[$i]['incoming_check_code'],
+                    'incoming_check_log_id' => $data[$i]['incoming_check_log_id'],
+                    'lot_number' => $data[$i]['lot_number'],
+                    'location' => $data[$i]['location'],
+                    'inspector_id' => $data[$i]['inspector_id'],
+                    'material_number' => $data[$i]['material_number'],
+                    'material_description' => $data[$i]['material_description'],
+                    'vendor' => $data[$i]['vendor'],
+                    'qty_rec' => $data[$i]['qty_rec'],
+                    'qty_check' => $data[$i]['qty_check'],
+                    'qty_ng' => $data[$i]['qty_ng'],
+                    'invoice' => $data[$i]['invoice'],
+                    'inspection_level' => $data[$i]['inspection_level'],
+                    'ng_name' => $data[$i]['ng_name'],
+                    'status_ng' => $data[$i]['status_ng'],
+                    'note_ng' => $data[$i]['note_ng'],
+                    'area' => $data[$i]['area'],
+                    'serial_number' => $data[$i]['serial_number'],
+                    'created_by' => $data[$i]['created_by'],
+                    'deleted_at' => $data[$i]['deleted_at'],
+                    'created_at' => $data[$i]['created_at'],
+                    'updated_at' => $data[$i]['updated_at'],
+                    'synced_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            $status = 200;
+            $response = count($data). ' incoming NG logs inserted successfully.';
+            return response()->json($response, $status);
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage() . ' line ' . $e->getLine(),
+            ];
+            return response()->json($response, $status);
+
+        }
+    }
+
 }
