@@ -544,6 +544,7 @@ class MasterController extends Controller
                     'pick_up' => $email[0]['pick_up'],
                     'remark' => $email[0]['remark'],
                     'car' => $email[0]['car'],
+                    'closure_status' => 'driver',
                     'requested_id' => $email[0]['requested_id'],
                     'requested_name' => $email[0]['requested_name'],
                     'requested_phone' => $email[0]['requested_phone'],
