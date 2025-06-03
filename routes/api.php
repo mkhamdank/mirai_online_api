@@ -68,3 +68,5 @@ Route::middleware('auth:sanctum')->get('/fetch/passenger_attendance', 'App\Http\
 
 Route::middleware('auth:sanctum')->post('/input/incoming_log', 'App\Http\Controllers\MasterController@insertIncomingLog');
 Route::middleware('auth:sanctum')->post('/input/incoming_ng_log', 'App\Http\Controllers\MasterController@insertIncomingNGLog');
+
+Route::middleware('auth:sanctum')->post('/update/japanese_otp', 'App\Http\Controllers\MasterController@updateJapaneseOtp');

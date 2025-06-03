@@ -1205,4 +1205,31 @@ class MasterController extends Controller
         }
     }
 
+    public function updateJapaneseOtp(Request $request)
+    {
+        $email = $request->all();
+
+        DB::beginTransaction();
+        try {
+            $insert = DB::connection('mysql_new')->table('japaneses')
+            ->where('employee_id', $email[0]['employee_id'])
+                ->update([
+                    'driver_otp' => $email[0]['otp'],
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+
+        DB::commit();
+        $status = 200;
+        return response()->json($status);
+    }
+
 }
