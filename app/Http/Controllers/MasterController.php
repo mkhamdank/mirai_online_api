@@ -1232,4 +1232,45 @@ class MasterController extends Controller
         return response()->json($status);
     }
 
+    function insertPassenger(Request $request) {
+        $truncate = DB::connection('mysql_new')
+            ->table('driver_passengers')
+            ->truncate();
+
+        try {
+            $data = $request->all();
+
+            for ($i=0; $i < count($data); $i++) { 
+                $insert = db::connection('mysql_new')
+                ->table('driver_passengers')
+                ->insert([
+                    'destination' => $data[$i]['destination'],
+                    'employee_id' => $data[$i]['employee_id'],
+                    'name' => $data[$i]['name'],
+                    'department' => $data[$i]['department'],
+                    'hire_date' => $data[$i]['hire_date'],
+                    'grade_code' => $data[$i]['grade_code'],
+                    'employment_status' => $data[$i]['employment_status'],
+                    'tag' => $data[$i]['tag'],
+                    'created_by' => $data[$i]['created_by'],
+                    'created_at' => $data[$i]['created_at'],
+                    'updated_at' => $data[$i]['updated_at'],
+                    'synced_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            $status = 200;
+            $response = count($data). ' passengers inserted successfully.';
+            return response()->json($response, $status);
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage() . ' line ' . $e->getLine(),
+            ];
+            return response()->json($response, $status);
+
+        }
+    }
+
 }
