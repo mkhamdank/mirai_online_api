@@ -1252,6 +1252,8 @@ class MasterController extends Controller
                     'grade_code' => $data[$i]['grade_code'],
                     'employment_status' => $data[$i]['employment_status'],
                     'tag' => $data[$i]['tag'],
+                    'meeting_point' => $data[$i]['meeting_point'],
+                    'pick_up_time' => $data[$i]['pick_up_time'],
                     'created_by' => $data[$i]['created_by'],
                     'created_at' => $data[$i]['created_at'],
                     'updated_at' => $data[$i]['updated_at'],
