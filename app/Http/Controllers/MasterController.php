@@ -1275,4 +1275,86 @@ class MasterController extends Controller
         }
     }
 
+    function insertCaseNGLog(Request $request) {
+        $truncate = DB::
+            table('pn_case_log_ngs')
+            ->truncate();
+
+        try {
+            $data = $request->all();
+
+            for ($i=0; $i < count($data); $i++) { 
+                $insert = db::table('pn_case_log_ngs')
+                ->insert([
+                    'log_id' => $data[$i]['log_id'],
+                    'form_number' => $data[$i]['form_number'],
+                    'ng' => $data[$i]['ng'],
+                    'ng_status' => $data[$i]['ng_status'],
+                    'operator' => $data[$i]['operator'],
+                    'line' => $data[$i]['line'],
+                    'type' => $data[$i]['type'],
+                    'location' => $data[$i]['location'],
+                    'qty' => $data[$i]['qty'],
+                    'remark' => $data[$i]['remark'],
+                    'created_by' => $data[$i]['created_by'],
+                    'created_at' => $data[$i]['created_at'],
+                    'updated_at' => $data[$i]['updated_at'],
+                    'synced_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            $status = 200;
+            $response = count($data). ' case NG log inserted successfully.';
+            return response()->json($response, $status);
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage() . ' line ' . $e->getLine(),
+            ];
+            return response()->json($response, $status);
+
+        }
+    }
+
+    function insertCaseLog(Request $request) {
+        $truncate = DB::
+            table('pn_case_log_proccesses')
+            ->truncate();
+
+        try {
+            $data = $request->all();
+
+            for ($i=0; $i < count($data); $i++) { 
+                $insert = db::table('pn_case_log_proccesses')
+                ->insert([
+                    'form_number' => $data[$i]['form_number'],
+                    'line' => $data[$i]['line'],
+                    'operator' => $data[$i]['operator'],
+                    'type' => $data[$i]['type'],
+                    'location' => $data[$i]['location'],
+                    'qty' => $data[$i]['qty'],
+                    'synced_at' => $data[$i]['synced_at'],
+                    'created_by' => $data[$i]['created_by'],
+                    'deleted_at' => $data[$i]['deleted_at'],
+                    'created_at' => $data[$i]['created_at'],
+                    'updated_at' => $data[$i]['updated_at'],
+                    'synced_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            $status = 200;
+            $response = count($data). ' case log inserted successfully.';
+            return response()->json($response, $status);
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage() . ' line ' . $e->getLine(),
+            ];
+            return response()->json($response, $status);
+
+        }
+    }
+
 }
