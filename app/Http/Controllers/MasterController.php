@@ -1334,7 +1334,6 @@ class MasterController extends Controller
                     'type' => $data[$i]['type'],
                     'location' => $data[$i]['location'],
                     'qty' => $data[$i]['qty'],
-                    'synced_at' => $data[$i]['synced_at'],
                     'created_by' => $data[$i]['created_by'],
                     'deleted_at' => $data[$i]['deleted_at'],
                     'created_at' => $data[$i]['created_at'],
