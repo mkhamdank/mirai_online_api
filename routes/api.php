@@ -73,4 +73,4 @@ Route::middleware('auth:sanctum')->post('/update/japanese_otp', 'App\Http\Contro
 Route::middleware('auth:sanctum')->post('/input/passenger', 'App\Http\Controllers\MasterController@insertPassenger');
 
 Route::middleware('auth:sanctum')->post('/input/case_log', 'App\Http\Controllers\MasterController@insertCaseLog');
-Route::middleware('auth:sanctum')->post('/input/case_ng_log', 'App\Http\Controllers\MasterController@insertCaseNGLog');
+Route::middleware('auth:sanctum')->post('/input/case_ng_log', 'App\Http\Controllers\MasterController@insertCaseLog');
