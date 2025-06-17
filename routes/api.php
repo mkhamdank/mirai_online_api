@@ -74,3 +74,5 @@ Route::middleware('auth:sanctum')->post('/input/passenger', 'App\Http\Controller
 
 Route::middleware('auth:sanctum')->post('/input/case_log', 'App\Http\Controllers\MasterController@insertCaseLog');
 Route::middleware('auth:sanctum')->post('/input/case_ng_log', 'App\Http\Controllers\MasterController@insertCaseNGLog');
+
+Route::middleware('auth:sanctum')->post('/input/return', 'App\Http\Controllers\MasterController@insertScrapReturn');

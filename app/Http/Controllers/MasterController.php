@@ -1355,4 +1355,60 @@ class MasterController extends Controller
         }
     }
 
+    function insertScrapReturn(Request $request) {
+        $truncate = DB::
+            table('scrap_logs')
+            ->truncate();
+
+        try {
+            $data = $request->all();
+
+            for ($i=0; $i < count($data); $i++) { 
+                $insert = db::table('scrap_logs')
+                ->insert([
+                    'scrap_id' => $data[$i]['scrap_id'],
+                    'slip' => $data[$i]['slip'],
+                    'order_no' => $data[$i]['order_no'],
+                    'material_number' => $data[$i]['material_number'],
+                    'material_description' => $data[$i]['material_description'],
+                    'spt' => $data[$i]['spt'],
+                    'valcl' => $data[$i]['valcl'],
+                    'category' => $data[$i]['category'],
+                    'issue_location' => $data[$i]['issue_location'],
+                    'receive_location' => $data[$i]['receive_location'],
+                    'remark' => $data[$i]['remark'],
+                    'quantity' => $data[$i]['quantity'],
+                    'uom' => $data[$i]['uom'],
+                    'category_reason' => $data[$i]['category_reason'],
+                    'reason' => $data[$i]['reason'],
+                    'summary' => $data[$i]['summary'],
+                    'no_invoice' => $data[$i]['no_invoice'],
+                    'cites_cat' => $data[$i]['cites_cat'],
+                    'created_by' => $data[$i]['created_by'],
+                    'scraped_by' => $data[$i]['scraped_by'],
+                    'canceled_by' => $data[$i]['canceled_by'],
+                    'canceled_user' => $data[$i]['canceled_user'],
+                    'canceled_user_at' => $data[$i]['canceled_user_at'],
+                    'slip_created' => $data[$i]['slip_created'],
+                    'created_at' => $data[$i]['created_at'],
+                    'deleted_at' => $data[$i]['deleted_at'],
+                    'updated_at' => $data[$i]['updated_at'],
+                    'synced_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            $status = 200;
+            $response = count($data). ' scrap log inserted successfully.';
+            return response()->json($response, $status);
+
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage() . ' line ' . $e->getLine(),
+            ];
+            return response()->json($response, $status);
+
+        }
+    }
+
 }
