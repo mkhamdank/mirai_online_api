@@ -1253,6 +1253,7 @@ class MasterController extends Controller
                     'employment_status' => $data[$i]['employment_status'],
                     'tag' => $data[$i]['tag'],
                     'meeting_point' => $data[$i]['meeting_point'],
+                    'status' => $data[$i]['status'],
                     'pick_up_time' => $data[$i]['pick_up_time'],
                     'created_by' => $data[$i]['created_by'],
                     'created_at' => $data[$i]['created_at'],
