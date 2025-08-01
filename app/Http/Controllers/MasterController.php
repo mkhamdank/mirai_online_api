@@ -1412,4 +1412,18 @@ class MasterController extends Controller
         }
     }
 
+    public function fetchDriverGasoline()
+    {
+
+        $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+        ->select('task_id')
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'driver_task' => $driver_task,
+        );
+        return Response::json($response);
+    }
+
 }
