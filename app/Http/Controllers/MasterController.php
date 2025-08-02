@@ -1426,4 +1426,18 @@ class MasterController extends Controller
         return Response::json($response);
     }
 
+    public function fetchMoldingMaster()
+    {
+
+        $molding_master = DB::connection('mysql_new')->table('molding_diagnose_masters')
+        ->select('fixed_asset_number', 'fixed_asset_name', 'vendor', 'acquired_date', 'classification', 'standard_shot', 'total_shot', 'status', 'remark')
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'molding_master' => $molding_master,
+        );
+        return Response::json($response);
+    }
+
 }

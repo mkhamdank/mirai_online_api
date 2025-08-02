@@ -77,5 +77,6 @@ Route::middleware('auth:sanctum')->post('/input/case_ng_log', 'App\Http\Controll
 
 Route::middleware('auth:sanctum')->post('/input/return', 'App\Http\Controllers\MasterController@insertScrapReturn');
 
-
 Route::middleware('auth:sanctum')->get('/fetch/driver_gasoline', 'App\Http\Controllers\MasterController@fetchDriverGasoline');
+
+Route::middleware('auth:sanctum')->get('/fetch/molding_master', 'App\Http\Controllers\MasterController@fetchMoldingMaster');
