@@ -1009,6 +1009,7 @@ class MasterController extends Controller
     function fetchVendorGift()
     {
         $vendor_gift = DB::connection('mysql_new')->table('vendor_gifts')
+        ->where('status','Active')
             ->get();
 
         try {
@@ -1428,7 +1429,6 @@ class MasterController extends Controller
 
     public function fetchMoldingMaster()
     {
-
         $molding_master = DB::connection('mysql_new')->table('molding_diagnose_masters')
         ->select('fixed_asset_number', 'fixed_asset_name', 'vendor', 'acquired_date', 'classification', 'standard_shot', 'total_shot', 'status', 'remark')
             ->get();
@@ -1437,7 +1437,119 @@ class MasterController extends Controller
             'status' => true,
             'molding_master' => $molding_master,
         );
-        return Response::json($response);
+        return response()->json($response);
+    }
+
+    public function fetchMoldingHistoryInput(Request $request)
+    {
+        $fixed_asset_number = $request->fixed_asset_number;
+        
+        $molding_history_input = DB::connection('mysql_new')->table('molding_diagnose_shots')
+        ->leftJoin('molding_diagnose_masters', 'molding_diagnose_shots.fixed_asset_number', '=', 'molding_diagnose_masters.fixed_asset_number')
+        ->select('molding_diagnose_shots.fixed_asset_number', 'molding_name', 'period', 'molding_diagnose_shots.total_shot', 'standard_shot', 'accumulative_shot', 'molding_diagnose_shots.status', 'molding_diagnose_shots.remark', 'molding_diagnose_shots.created_at', 'molding_diagnose_shots.created_by')
+            ->where('molding_diagnose_shots.fixed_asset_number', $fixed_asset_number)
+            ->orderBy('molding_diagnose_shots.created_at', 'desc')
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'molding_history_input' => $molding_history_input
+        );
+        return response()->json($response);
+    }
+
+    public function fetchMoldingHistoryCheck(Request $request)
+    {
+        $fixed_asset_number = $request->fixed_asset_number;
+        
+        $molding_history_check = DB::connection('mysql_new')->table('molding_diagnose_forms')
+        ->select('form_number', 'fixed_asset_number', 'fixed_asset_name', 'vendor', 'status', 'remark', 'created_by', 'created_at')
+            ->where('fixed_asset_number', $fixed_asset_number)
+            ->orderBy('molding_diagnose_forms.created_at', 'desc')
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'molding_history_check' => $molding_history_check,
+        );
+        return response()->json($response);
+    }
+
+    public function fetchMoldingReport($form_number)
+    {   
+        // ------------------- PRODUCT REPORT -------------------
+        $product = DB::table('molding_diagnose_forms')
+            ->leftJoin('molding_diagnose_product_forms', 'molding_diagnose_forms.form_number', '=', 'molding_diagnose_product_forms.master_form_number')
+            ->where('molding_diagnose_forms.form_number', $form_number)
+            ->select('molding_diagnose_forms.fixed_asset_name', 'molding_diagnose_forms.photo_product',
+            'molding_diagnose_product_forms.points', 'molding_diagnose_product_forms.check_by', 'molding_diagnose_product_forms.check_at')
+            ->first();
+
+        $product_checklist = DB::table('molding_diagnose_product_masters')
+            ->leftJoin(db::raw('(SELECT * FROM molding_diagnose_product_details WHERE master_form_number = "' . $form_number . '") as details'), 'molding_diagnose_product_masters.id', '=', 'details.ng_id')
+            ->select('molding_diagnose_product_masters.id','item_ng','category_check','grouping', 'details.diagnose_result', 'details.deduction as actual_deduction')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        // -------------------- PRODUCT NG -------------
+        $product_ngs = DB::table('molding_diagnose_product_ngs')
+            ->where('molding_diagnose_product_ngs.master_form_number', $form_number)
+            ->select('molding_diagnose_product_ngs.fixed_asset_name', 'molding_diagnose_product_ngs.photo1', 'molding_diagnose_product_ngs.photo2',
+            'molding_diagnose_product_ngs.id_ng', 'molding_diagnose_product_ngs.ng_name', 'molding_diagnose_product_ngs.check_by', 'molding_diagnose_product_ngs.check_at')
+            ->orderBy('id_ng', 'asc')
+            ->get()
+            ->toArray();
+
+        // return view('molding.report.report_product_ng', compact('form_number', 'ngs'));
+
+        // -------------------- MOLDING REPORT -------------
+        $moldings = DB::table('molding_diagnose_forms')
+            ->leftJoin('molding_diagnose_molding_forms', 'molding_diagnose_forms.form_number', '=', 'molding_diagnose_molding_forms.master_form_number')
+            ->where('molding_diagnose_forms.form_number', $form_number)
+            ->select('molding_diagnose_forms.fixed_asset_name',
+            'molding_diagnose_molding_forms.points', 'molding_diagnose_molding_forms.check_by', 'molding_diagnose_molding_forms.check_at')
+            ->first();
+
+        $molding_checklist = DB::table('molding_diagnose_molding_masters')
+            ->leftJoin(db::raw('(SELECT * FROM molding_diagnose_molding_details WHERE master_form_number = "' . $form_number . '") as details'), 'molding_diagnose_molding_masters.id', '=', 'details.ng_id')
+            ->select('molding_diagnose_molding_masters.id','item_ng','grouping', 'details.diagnose_result', 'details.deduction as actual_deduction', 'molding_diagnose_molding_masters.daerah_ng', 'details.parts', 'molding_diagnose_molding_masters.item_check', db::raw('GROUP_CONCAT(details.item_name SEPARATOR ", ") as item_name'), 'details.note')
+            ->groupBy('molding_diagnose_molding_masters.id','item_ng','grouping', 'details.diagnose_result', 'details.deduction', 'molding_diagnose_molding_masters.daerah_ng', 'details.parts', 'molding_diagnose_molding_masters.item_check', 'details.note')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        // return view('molding.report.report_mold_form', compact('form_number', 'molding_name', 'checklist'));
+
+        // -------------------- MOLDING NG -------------
+
+        $molding_ng = DB::table('molding_diagnose_molding_details')
+            ->where('molding_diagnose_molding_details.master_form_number', $form_number)
+            ->select('molding_diagnose_molding_details.fixed_asset_name', 'molding_diagnose_molding_details.photo1', 'molding_diagnose_molding_details.photo2',
+            'molding_diagnose_molding_details.ng_id', 'molding_diagnose_molding_details.ng_name')
+            ->orderBy('ng_id', 'asc')
+            ->get()
+            ->toArray();
+
+        // return view('molding.report.report_mold_ng', compact('form_number', 'ngs'));
+
+        // -------------------- MOLDING EVALUASI -------------
+
+        $data_master = DB::table('molding_diagnose_forms')
+        ->where('molding_diagnose_forms.form_number', $form_number)
+        ->select('molding_diagnose_forms.fixed_asset_name', 'molding_diagnose_forms.rank',
+        'molding_diagnose_forms.total_score', 'product_category', 'production_qty', 'production_date', 'production_period', 'molding_diagnose_forms.check_by', 'molding_diagnose_forms.check_at')
+        ->first();
+
+        $response = array(
+            'status' => true,
+            'data_evaluasi' => $data_master,
+            'data_molding' => $moldings,
+            'data_molding_checklist' => $molding_checklist,
+            'data_molding_ng' => $molding_ng,
+            'data_product' => $product,
+            'data_product_checklist' => $product_checklist,
+            'data_product_ng' => $product_ngs,
+        );
+        return response()->json($response);
     }
 
 }
