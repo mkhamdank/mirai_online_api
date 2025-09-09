@@ -1555,37 +1555,28 @@ class MasterController extends Controller
     public function inputDriverLists(Request $request)
     {
         $data = $request->all();
-        $status = 200;
-        $response = $data;
-        return response()->json($response, $status);
 
         DB::beginTransaction();
         try {
-            $insert = DB::connection('mysql_new')->table('driver_tasks')
-                ->insert([
-                    'task_id' => $email[0]['task_id'],
-                    'date_from' => $email[0]['date_from'],
-                    'date_to' => $email[0]['date_to'],
-                    'created_by_id' => $email[0]['created_by_id'],
-                    'created_by_name' => $email[0]['created_by_name'],
-                    'driver_id' => $email[0]['driver_id'],
-                    'driver_name' => $email[0]['driver_name'],
-                    'destination' => $email[0]['destination'],
-                    'plat_no' => $email[0]['plat_no'],
-                    'purpose' => $email[0]['purpose'],
-                    'pick_up' => $email[0]['pick_up'],
-                    'remark' => $email[0]['remark'],
-                    'car' => $email[0]['car'],
-                    'closure_status' => 'driver',
-                    'requested_id' => $email[0]['requested_id'],
-                    'requested_name' => $email[0]['requested_name'],
-                    'requested_phone' => $email[0]['requested_phone'],
-                    'driver_phone' => $email[0]['driver_phone'],
-                    'created_by_id' => $email[0]['created_by_id'],
-                    'created_by_name' => $email[0]['created_by_name'],
-                    'created_at' => $email[0]['created_at'],
-                    'updated_at' => $email[0]['updated_at'],
-                ]);
+            for ($i = 0; $i < count($data); $i++) {
+                $insert = DB::connection('mysql_new')->table('driver_lists')
+                ->insert(
+                    [
+                        'driver_id' => $data[$i]['driver_id'],
+                        'driver_name' => $data[$i]['driver_name'],
+                        'phone_no' => $data[$i]['phone_no'],
+                        'whatsapp_no' => $data[$i]['whatsapp_no'],
+                        'plat_no' => $data[$i]['plat_no'],
+                        'car' => $data[$i]['car'],
+                        'passenger_id' => $data[$i]['passenger_id'],
+                        'passenger_name' => $data[$i]['passenger_name'],
+                        'passenger_category' => $data[$i]['passenger_category'],
+                        'created_by' => '1930',
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    ]
+                );
+            }
 
         } catch (\Exception $e) {
             DB::rollback();
