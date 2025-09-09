@@ -1558,6 +1558,9 @@ class MasterController extends Controller
 
         DB::beginTransaction();
         try {
+            $truncate = DB::connection('mysql_new')
+            ->table('driver_lists')
+            ->truncate();
             for ($i = 0; $i < count($data); $i++) {
                 $insert = DB::connection('mysql_new')->table('driver_lists')
                 ->insert(
