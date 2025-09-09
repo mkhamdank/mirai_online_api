@@ -1552,4 +1552,52 @@ class MasterController extends Controller
         return response()->json($response);
     }
 
+    public function inputDriverLists(Request $request)
+    {
+        $data = $request->all();
+        var_dump($data);
+        die();
+
+        DB::beginTransaction();
+        try {
+            $insert = DB::connection('mysql_new')->table('driver_tasks')
+                ->insert([
+                    'task_id' => $email[0]['task_id'],
+                    'date_from' => $email[0]['date_from'],
+                    'date_to' => $email[0]['date_to'],
+                    'created_by_id' => $email[0]['created_by_id'],
+                    'created_by_name' => $email[0]['created_by_name'],
+                    'driver_id' => $email[0]['driver_id'],
+                    'driver_name' => $email[0]['driver_name'],
+                    'destination' => $email[0]['destination'],
+                    'plat_no' => $email[0]['plat_no'],
+                    'purpose' => $email[0]['purpose'],
+                    'pick_up' => $email[0]['pick_up'],
+                    'remark' => $email[0]['remark'],
+                    'car' => $email[0]['car'],
+                    'closure_status' => 'driver',
+                    'requested_id' => $email[0]['requested_id'],
+                    'requested_name' => $email[0]['requested_name'],
+                    'requested_phone' => $email[0]['requested_phone'],
+                    'driver_phone' => $email[0]['driver_phone'],
+                    'created_by_id' => $email[0]['created_by_id'],
+                    'created_by_name' => $email[0]['created_by_name'],
+                    'created_at' => $email[0]['created_at'],
+                    'updated_at' => $email[0]['updated_at'],
+                ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+
+        DB::commit();
+        $status = 200;
+        return response()->json($status);
+    }
+
 }
