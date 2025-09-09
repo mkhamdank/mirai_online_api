@@ -1555,8 +1555,9 @@ class MasterController extends Controller
     public function inputDriverLists(Request $request)
     {
         $data = $request->all();
-        var_dump($data);
-        die();
+        $status = 200;
+        $response = $data;
+        return response()->json($response, $status);
 
         DB::beginTransaction();
         try {
