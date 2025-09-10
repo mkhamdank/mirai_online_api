@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->get('/fetch/driver_log', 'App\Http\Controller
 Route::middleware('auth:sanctum')->get('/fetch/attendance', 'App\Http\Controllers\MasterController@getAttendance');
 
 Route::middleware('auth:sanctum')->get('/fetch/driver_log/japanese', 'App\Http\Controllers\MasterController@fetchDriverLogJapanese');
+Route::middleware('auth:sanctum')->get('/fetch/driver_log/daily', 'App\Http\Controllers\MasterController@fetchDriverLogDaily');
 
 Route::middleware('auth:sanctum')->post('/delete/driver_task/{task_id}', 'App\Http\Controllers\MasterController@deleteDriverTask');
 

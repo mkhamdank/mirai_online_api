@@ -677,7 +677,6 @@ class MasterController extends Controller
             $update_driver_task = DB::connection('mysql_new')->table('driver_tasks')
                 ->where('id', $driver_task[$i]->id)
                 ->update([
-                    'closure_status' => 'closed',
                     'synced' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ]);
@@ -693,6 +692,47 @@ class MasterController extends Controller
             $driver_task_before = DB::connection('mysql_new')->table('driver_tasks')
                 ->where('synced', '!=', null)
                 ->where('remark','japanese')
+                ->where(DB::RAW('DATE_FORMAT(date_from,"%Y-%m-%d")'), '<', date('Y-m-d'))
+                ->update([
+                    'deleted_at' => date('Y-m-d H:i:s'),
+                ]);
+        }
+
+        $response = array(
+            'status' => true,
+            'driver_task' => $driver_task,
+        );
+        return Response::json($response);
+    }
+
+    public function fetchDriverLogDaily()
+    {
+
+        $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+            ->where('synced', null)
+            ->where('remark','daily_japanese')
+            ->whereIn('closure_status', ['daily_japanese','closed'])
+            ->get();
+
+        for ($i = 0; $i < count($driver_task); $i++) {
+            $update_driver_task = DB::connection('mysql_new')->table('driver_tasks')
+                ->where('id', $driver_task[$i]->id)
+                ->update([
+                    'synced' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+        }
+
+        $driver_task_before = DB::connection('mysql_new')->table('driver_tasks')
+            ->where('synced', '!=', null)
+            ->where('remark','daily_japanese')
+            ->where(DB::RAW('DATE_FORMAT(date_from,"%Y-%m-%d")'), '<', date('Y-m-d'))
+            ->get();
+
+        if (count($driver_task_before)) {
+            $driver_task_before = DB::connection('mysql_new')->table('driver_tasks')
+                ->where('synced', '!=', null)
+                ->where('remark','daily_japanese')
                 ->where(DB::RAW('DATE_FORMAT(date_from,"%Y-%m-%d")'), '<', date('Y-m-d'))
                 ->update([
                     'deleted_at' => date('Y-m-d H:i:s'),
