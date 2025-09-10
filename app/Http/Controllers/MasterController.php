@@ -549,6 +549,7 @@ class MasterController extends Controller
                     'requested_name' => $email[0]['requested_name'],
                     'requested_phone' => $email[0]['requested_phone'],
                     'driver_phone' => $email[0]['driver_phone'],
+                    'token' => $email[0]['token'],
                     'created_by_id' => $email[0]['created_by_id'],
                     'created_by_name' => $email[0]['created_by_name'],
                     'created_at' => $email[0]['created_at'],
