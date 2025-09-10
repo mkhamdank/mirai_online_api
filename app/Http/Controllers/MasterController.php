@@ -670,10 +670,7 @@ class MasterController extends Controller
         $driver_task = DB::connection('mysql_new')->table('driver_tasks')
             ->where('synced', null)
             ->where('remark','japanese')
-            ->where(function ($query) {
-                $query->where('closure_status', "japanese")
-                    ->orWhere('closure_status', "closed");
-            })
+            ->whereIn('closure_status', ['japanese','closed'])
             ->get();
 
         for ($i = 0; $i < count($driver_task); $i++) {
