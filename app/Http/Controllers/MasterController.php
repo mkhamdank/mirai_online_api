@@ -1674,4 +1674,22 @@ class MasterController extends Controller
         return response()->json($status);
     }
 
+    public function fetchDriverLogOutstanding()
+    {
+
+        $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+            ->where('synced', null)
+            ->where('deleted_at', null)
+            ->where('times', null)
+            ->whereIn('closure_status', ['driver'])
+            ->orderby('date_from', 'desc')
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'driver_task' => $driver_task,
+        );
+        return Response::json($response);
+    }
+
 }
