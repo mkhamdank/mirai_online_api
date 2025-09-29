@@ -1708,4 +1708,20 @@ class MasterController extends Controller
         return Response::json($response);
     }
 
+    public function fetchDriverReguler()
+    {
+
+        $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+        ->select('task_id')
+        ->where('remark','reguler')
+        ->where(DB::RAW("DATE_FORMAT(date_from, '%Y-%m')"), '=', date('Y-m'))
+        ->get();
+
+        $response = array(
+            'status' => true,
+            'driver_task' => $driver_task,
+        );
+        return Response::json($response);
+    }
+
 }
