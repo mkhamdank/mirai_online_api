@@ -1692,4 +1692,20 @@ class MasterController extends Controller
         return Response::json($response);
     }
 
+    public function fetchDriverJapaneseHoliday()
+    {
+
+        $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+        ->select('task_id')
+        ->where('remark','japanese')
+        ->whereDate('date_from', '>=', '2025-09-20')
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'driver_task' => $driver_task,
+        );
+        return Response::json($response);
+    }
+
 }

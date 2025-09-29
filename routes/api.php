@@ -84,6 +84,8 @@ Route::middleware('auth:sanctum')->post('/input/return', 'App\Http\Controllers\M
 
 Route::middleware('auth:sanctum')->get('/fetch/driver_gasoline', 'App\Http\Controllers\MasterController@fetchDriverGasoline');
 
+Route::middleware('auth:sanctum')->get('/fetch/driver_japanese_holiday', 'App\Http\Controllers\MasterController@fetchDriverJapaneseHoliday');
+
 Route::middleware('auth:sanctum')->get('/fetch/molding_master', 'App\Http\Controllers\MasterController@fetchMoldingMaster');
 Route::middleware('auth:sanctum')->get('/fetch/molding_history_input', 'App\Http\Controllers\MasterController@fetchMoldingHistoryInput');
 Route::middleware('auth:sanctum')->get('/fetch/molding_history_check', 'App\Http\Controllers\MasterController@fetchMoldingHistoryCheck');
