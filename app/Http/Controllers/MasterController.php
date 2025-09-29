@@ -1715,6 +1715,7 @@ class MasterController extends Controller
         ->select('task_id')
         ->where('remark','reguler')
         ->where(DB::RAW("DATE_FORMAT(date_from, '%Y-%m')"), '=', date('Y-m'))
+        ->whereDate('date_from', '>=', '2025-09-16')
         ->get();
 
         $response = array(
