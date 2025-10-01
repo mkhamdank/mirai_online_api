@@ -1712,7 +1712,7 @@ class MasterController extends Controller
     {
 
         $driver_task = DB::connection('mysql_new')->table('driver_tasks')
-        ->select('task_id')
+        ->select('task_id','token')
         ->where('remark','reguler')
         ->where(DB::RAW("DATE_FORMAT(date_from, '%Y-%m')"), '=', date('Y-m'))
         ->whereDate('date_from', '>=', '2025-09-16')
