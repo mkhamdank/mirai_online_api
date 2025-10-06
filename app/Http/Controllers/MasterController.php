@@ -556,6 +556,30 @@ class MasterController extends Controller
                     'updated_at' => $email[0]['updated_at'],
                 ]);
 
+            $check = DB::connection('mysql_new')->table('driver_pins')
+            ->where('task_id', $email[0]['task_id'])
+            ->first();
+
+            $token = $email[0]['token'];
+
+            if($email[0]['remark'] == 'japanese'){
+                $japanese = DB::connection('mysql_new')->table('japaneses')
+                ->where('employee_id',$email[0]['created_by_id'])
+                ->first();
+                $token = $japanese->driver_otp;
+            }
+
+            if(!$check){
+                $input = DB::connection('mysql_new')->table('driver_pins')
+                ->insert([
+                    'task_id' => $email[0]['task_id'],
+                    'token' => $token,
+                    'created_by' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
         } catch (\Exception $e) {
             DB::rollback();
             $status = 401;
