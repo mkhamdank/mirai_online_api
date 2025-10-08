@@ -1702,11 +1702,13 @@ class MasterController extends Controller
     {
 
         $driver_task = DB::connection('mysql_new')->table('driver_tasks')
-            ->where('synced', null)
-            ->where('deleted_at', null)
-            ->where('times', null)
-            ->whereIn('closure_status', ['driver'])
-            ->orderby('date_from', 'desc')
+        ->select('driver_tasks.*','driver_pins.token as token_new')
+        ->leftjoin('driver_pins', 'driver_tasks.task_id', '=', 'driver_pins.task_id')
+            ->where('driver_tasks.synced', null)
+            ->where('driver_tasks.deleted_at', null)
+            ->where('driver_tasks.times', null)
+            ->whereIn('driver_tasks.closure_status', ['driver'])
+            ->orderby('driver_tasks.date_from', 'desc')
             ->get();
 
         $response = array(
