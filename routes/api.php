@@ -91,3 +91,7 @@ Route::middleware('auth:sanctum')->get('/fetch/molding_master', 'App\Http\Contro
 Route::middleware('auth:sanctum')->get('/fetch/molding_history_input', 'App\Http\Controllers\MasterController@fetchMoldingHistoryInput');
 Route::middleware('auth:sanctum')->get('/fetch/molding_history_check', 'App\Http\Controllers\MasterController@fetchMoldingHistoryCheck');
 Route::middleware('auth:sanctum')->get('/fetch/molding_report/{form_number}', 'App\Http\Controllers\MasterController@fetchMoldingReport');
+
+Route::middleware('auth:sanctum')->post('/input/images', 'App\Http\Controllers\MasterController@insertImages');
+
+Route::middleware('auth:sanctum')->post('/update/whatsapp', 'App\Http\Controllers\MasterController@updateWhatsapp');

@@ -1751,4 +1751,56 @@ class MasterController extends Controller
         return Response::json($response);
     }
 
+    function insertImages(Request $request) {
+        $data = $request->all();
+
+        DB::beginTransaction();
+        try {
+            var_dump($data);
+            $response = array(
+                'status' => true,
+                'data' => $data,
+            );
+            return Response::json($response);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+
+        DB::commit();
+        $status = 200;
+        return response()->json($status);
+    }
+
+    function updateWhatsapp(Request $request)
+    {
+        try {
+            $status = 200;
+
+            $remark = $request->get('remark');
+            $values = $request->get('values');
+
+            $total = DB::connection('mysql_new')->table("all_controls")->where('values', $values)->where('note','whatsapp')->update([
+                'remark' => $remark,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            $response = $total;
+            return response()->json($response, $status);
+
+        } catch (\Exception$e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+        
+    }
+
 }
