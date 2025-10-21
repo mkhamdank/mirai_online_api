@@ -1803,4 +1803,16 @@ class MasterController extends Controller
         
     }
 
+    public function fetchDriverPin()
+    {
+        $driver_pin = DB::connection('mysql_new')->table('driver_pins')
+        ->get();
+
+        $response = array(
+            'status' => true,
+            'driver_pin' => $driver_pin,
+        );
+        return Response::json($response);
+    }
+
 }

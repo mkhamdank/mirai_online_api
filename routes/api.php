@@ -95,3 +95,5 @@ Route::middleware('auth:sanctum')->get('/fetch/molding_report/{form_number}', 'A
 Route::middleware('auth:sanctum')->post('/input/images', 'App\Http\Controllers\MasterController@insertImages');
 
 Route::middleware('auth:sanctum')->post('/update/whatsapp', 'App\Http\Controllers\MasterController@updateWhatsapp');
+
+Route::middleware('auth:sanctum')->get('/fetch/driver_pin', 'App\Http\Controllers\MasterController@fetchDriverPin');
