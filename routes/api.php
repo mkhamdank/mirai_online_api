@@ -99,3 +99,4 @@ Route::middleware('auth:sanctum')->post('/update/whatsapp', 'App\Http\Controller
 Route::middleware('auth:sanctum')->get('/fetch/driver_pin', 'App\Http\Controllers\MasterController@fetchDriverPin');
 
 Route::middleware('auth:sanctum')->get('/fetch/driver_gasoline_update', 'App\Http\Controllers\MasterController@fetchGasolineUpdate');
+Route::middleware('auth:sanctum')->post('/update/driver_gasoline_after', 'App\Http\Controllers\MasterController@updateGasolineAfter');
