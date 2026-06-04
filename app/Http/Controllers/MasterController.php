@@ -599,6 +599,7 @@ class MasterController extends Controller
 
         $driver_task = DB::connection('mysql_new')->table('driver_tasks')
             ->where('synced', null)
+            ->where('check_gasoline','!=', null)
             ->where('remark',null)
             ->where('times', '!=', null)
             ->get();
@@ -1533,7 +1534,7 @@ class MasterController extends Controller
     public function fetchMoldingMaster()
     {
         $molding_master = DB::connection('mysql_new')->table('molding_diagnose_masters')
-        ->select('fixed_asset_number', 'fixed_asset_name', 'vendor', 'acquired_date', 'classification', 'standard_shot', 'total_shot', 'status', 'remark')
+        ->select('fixed_asset_number', 'fixed_asset_name', 'vendor', 'acquired_date', db::raw('DATE_FORMAT(acquired_date, "%d %b %Y") as acq_date'), 'classification', 'standard_shot', 'total_shot', 'status', 'remark')
             ->get();
 
         $response = array(
@@ -1566,7 +1567,7 @@ class MasterController extends Controller
         $fixed_asset_number = $request->fixed_asset_number;
         
         $molding_history_check = DB::connection('mysql_new')->table('molding_diagnose_forms')
-        ->select('form_number', 'fixed_asset_number', 'fixed_asset_name', 'vendor', 'status', 'remark', 'created_by', 'created_at')
+        ->select('form_number', 'fixed_asset_number', 'fixed_asset_name', 'vendor', 'total_score', 'rank', 'status', 'remark', 'created_by', 'created_at')
             ->where('fixed_asset_number', $fixed_asset_number)
             ->orderBy('molding_diagnose_forms.created_at', 'desc')
             ->get();
@@ -1578,24 +1579,41 @@ class MasterController extends Controller
         return response()->json($response);
     }
 
+    public function fetchMoldingHistoryFail(Request $request)
+    {
+        $fixed_asset_number = $request->fixed_asset_number;
+        
+        $molding_history_fail = DB::connection('mysql_new')->table('molding_diagnose_troubles')
+        ->select('fixed_asset_number', 'molding_name', 'tgl_kejadian', 'tgl_request', 'total_shot', 'gejala', 'photo_kerusakan', 'repair_method', 'selected_method', 'reason_method', 'before_repair', 'after_repair', 'pemastian_mold', 'pemastian_product', 'status', 'created_by', 'created_at')
+            ->where('fixed_asset_number', $fixed_asset_number)
+            ->orderBy('molding_diagnose_troubles.created_at', 'desc')
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'molding_history_fail' => $molding_history_fail,
+        );
+        return response()->json($response);
+    }
+
     public function fetchMoldingReport($form_number)
     {   
         // ------------------- PRODUCT REPORT -------------------
-        $product = DB::table('molding_diagnose_forms')
+        $product = DB::connection('mysql_new')->table('molding_diagnose_forms')
             ->leftJoin('molding_diagnose_product_forms', 'molding_diagnose_forms.form_number', '=', 'molding_diagnose_product_forms.master_form_number')
             ->where('molding_diagnose_forms.form_number', $form_number)
             ->select('molding_diagnose_forms.fixed_asset_name', 'molding_diagnose_forms.photo_product',
             'molding_diagnose_product_forms.points', 'molding_diagnose_product_forms.check_by', 'molding_diagnose_product_forms.check_at')
             ->first();
 
-        $product_checklist = DB::table('molding_diagnose_product_masters')
+        $product_checklist = DB::connection('mysql_new')->table('molding_diagnose_product_masters')
             ->leftJoin(db::raw('(SELECT * FROM molding_diagnose_product_details WHERE master_form_number = "' . $form_number . '") as details'), 'molding_diagnose_product_masters.id', '=', 'details.ng_id')
             ->select('molding_diagnose_product_masters.id','item_ng','category_check','grouping', 'details.diagnose_result', 'details.deduction as actual_deduction')
             ->orderBy('id', 'asc')
             ->get();
 
         // -------------------- PRODUCT NG -------------
-        $product_ngs = DB::table('molding_diagnose_product_ngs')
+        $product_ngs = DB::connection('mysql_new')->table('molding_diagnose_product_ngs')
             ->where('molding_diagnose_product_ngs.master_form_number', $form_number)
             ->select('molding_diagnose_product_ngs.fixed_asset_name', 'molding_diagnose_product_ngs.photo1', 'molding_diagnose_product_ngs.photo2',
             'molding_diagnose_product_ngs.id_ng', 'molding_diagnose_product_ngs.ng_name', 'molding_diagnose_product_ngs.check_by', 'molding_diagnose_product_ngs.check_at')
@@ -1606,14 +1624,14 @@ class MasterController extends Controller
         // return view('molding.report.report_product_ng', compact('form_number', 'ngs'));
 
         // -------------------- MOLDING REPORT -------------
-        $moldings = DB::table('molding_diagnose_forms')
+        $moldings = DB::connection('mysql_new')->table('molding_diagnose_forms')
             ->leftJoin('molding_diagnose_molding_forms', 'molding_diagnose_forms.form_number', '=', 'molding_diagnose_molding_forms.master_form_number')
             ->where('molding_diagnose_forms.form_number', $form_number)
             ->select('molding_diagnose_forms.fixed_asset_name',
             'molding_diagnose_molding_forms.points', 'molding_diagnose_molding_forms.check_by', 'molding_diagnose_molding_forms.check_at')
             ->first();
 
-        $molding_checklist = DB::table('molding_diagnose_molding_masters')
+        $molding_checklist = DB::connection('mysql_new')->table('molding_diagnose_molding_masters')
             ->leftJoin(db::raw('(SELECT * FROM molding_diagnose_molding_details WHERE master_form_number = "' . $form_number . '") as details'), 'molding_diagnose_molding_masters.id', '=', 'details.ng_id')
             ->select('molding_diagnose_molding_masters.id','item_ng','grouping', 'details.diagnose_result', 'details.deduction as actual_deduction', 'molding_diagnose_molding_masters.daerah_ng', 'details.parts', 'molding_diagnose_molding_masters.item_check', db::raw('GROUP_CONCAT(details.item_name SEPARATOR ", ") as item_name'), 'details.note')
             ->groupBy('molding_diagnose_molding_masters.id','item_ng','grouping', 'details.diagnose_result', 'details.deduction', 'molding_diagnose_molding_masters.daerah_ng', 'details.parts', 'molding_diagnose_molding_masters.item_check', 'details.note')
@@ -1624,7 +1642,7 @@ class MasterController extends Controller
 
         // -------------------- MOLDING NG -------------
 
-        $molding_ng = DB::table('molding_diagnose_molding_details')
+        $molding_ng = DB::connection('mysql_new')->table('molding_diagnose_molding_details')
             ->where('molding_diagnose_molding_details.master_form_number', $form_number)
             ->select('molding_diagnose_molding_details.fixed_asset_name', 'molding_diagnose_molding_details.photo1', 'molding_diagnose_molding_details.photo2',
             'molding_diagnose_molding_details.ng_id', 'molding_diagnose_molding_details.ng_name')
@@ -1636,11 +1654,13 @@ class MasterController extends Controller
 
         // -------------------- MOLDING EVALUASI -------------
 
-        $data_master = DB::table('molding_diagnose_forms')
+        $data_master = DB::connection('mysql_new')->table('molding_diagnose_forms')
+        ->leftJoin('molding_diagnose_approvers', 'molding_diagnose_forms.form_number', '=', 'molding_diagnose_approvers.form_number')
         ->where('molding_diagnose_forms.form_number', $form_number)
         ->select('molding_diagnose_forms.fixed_asset_name', 'molding_diagnose_forms.rank',
-        'molding_diagnose_forms.total_score', 'product_category', 'production_qty', 'production_date', 'production_period', 'molding_diagnose_forms.check_by', 'molding_diagnose_forms.check_at')
-        ->first();
+        'molding_diagnose_forms.total_score', 'product_category', 'production_qty', 'production_date', 'production_period', 'penilaian_keseluruhan', 'pertimbangan_histori', 'tindakan_perbaikan', 'molding_diagnose_forms.created_by', db::raw('date_format(molding_diagnose_forms.created_at, "%d %b %Y") AS creat_at'), db::raw("SUBSTRING_INDEX(molding_diagnose_approvers.approver_name, ' ', 2) AS app_name"), db::raw('date_format(molding_diagnose_approvers.approve_at, "%d %b %Y") AS app_at'), db::raw('DATE_FORMAT(molding_diagnose_forms.production_date, "%d %b %Y") as prod_date'), 'molding_diagnose_approvers.status as status_app')
+        ->orderBy('molding_diagnose_approvers.id', 'asc')
+        ->get();
 
         $response = array(
             'status' => true,
@@ -1653,6 +1673,93 @@ class MasterController extends Controller
             'data_product_ng' => $product_ngs,
         );
         return response()->json($response);
+    }
+
+    public function fetchMoldingMonitoring(Request $request)
+    {
+        $first_date = new \DateTime($request->first_date);
+        $first_week = $first_date->format('oW');
+
+        $last_date = new \DateTime($request->last_date);
+        $last_week = $last_date->format('oW');
+
+        $weeks = [];
+
+        // loop dari tanggal pertama sampai terakhir
+        $period = new \DatePeriod($first_date, new \DateInterval('P1D'), $last_date->modify('+1 day'));
+        foreach ($period as $date) {
+            $week = $date->format('oW');
+            if (!in_array($week, $weeks)) {
+                $weeks[] = $week;
+            }
+        }
+
+        //get last 6 weeks
+        $last_6_weeks = array_slice($weeks, -6);
+
+        $master_molding = db::connection('mysql_new')->table('molding_diagnose_masters')
+        ->select('molding_diagnose_masters.*')
+        ->whereNull('molding_diagnose_masters.deleted_at')
+        ->get();
+
+        $data_shot = DB::connection('mysql_new')->table('molding_diagnose_shots')
+        ->select('molding_diagnose_shots.fixed_asset_number', 'week_number', 'created_at', 'total_shot', 'accumulative_shot', 'created_by')
+        ->whereNull('molding_diagnose_shots.deleted_at')
+        ->whereIn('molding_diagnose_shots.week_number', $last_6_weeks)
+        ->get();
+
+        $shot_history = DB::connection('mysql_new')->SELECT("SELECT 
+                s.fixed_asset_number,
+                m.fixed_asset_name,
+                m.standard_shot,
+                s.week_number,
+                s.total_shot,
+                s.accumulative_shot,
+                s.created_at AS first_exceed_date,
+                DATE_FORMAT(s.created_at, '%b %Y') AS month_exceed_date,
+                f.form_number,
+                f.status as status_form,
+                f.created_at AS form_created_at
+            FROM molding_diagnose_shots AS s
+            JOIN (
+                SELECT 
+                    s2.fixed_asset_number,
+                    MIN(s2.created_at) AS first_exceed_date
+                FROM molding_diagnose_shots AS s2
+                JOIN molding_diagnose_masters AS m2 
+                    ON s2.fixed_asset_number = m2.fixed_asset_number
+                WHERE 
+                    s2.accumulative_shot >= m2.standard_shot
+                GROUP BY s2.fixed_asset_number
+            ) AS first_exceed
+                ON s.fixed_asset_number = first_exceed.fixed_asset_number
+                AND s.created_at = first_exceed.first_exceed_date
+            LEFT JOIN molding_diagnose_masters AS m 
+                ON s.fixed_asset_number = m.fixed_asset_number
+            LEFT JOIN (
+                SELECT f1.*
+                FROM molding_diagnose_forms AS f1
+                JOIN (
+                    SELECT 
+                        fixed_asset_number,
+                        MIN(created_at) AS first_form_date
+                    FROM molding_diagnose_forms
+                    GROUP BY fixed_asset_number
+                ) AS f2
+                ON f1.fixed_asset_number = f2.fixed_asset_number
+                AND f1.created_at = f2.first_form_date
+            ) AS f
+                ON s.fixed_asset_number = f.fixed_asset_number
+            ORDER BY s.created_at");
+
+        $data = [
+            'data_master' => $master_molding,
+            'data_shot' => $data_shot,
+            'data_shot_history' => $shot_history,
+            'weeks' => $last_6_weeks,
+        ];
+
+        return response()->json($data);
     }
 
     public function inputDriverLists(Request $request)
