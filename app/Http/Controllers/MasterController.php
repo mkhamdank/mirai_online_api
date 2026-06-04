@@ -1815,4 +1815,29 @@ class MasterController extends Controller
         return Response::json($response);
     }
 
+    function fetchGasolineUpdate(Request $request) {
+        try {
+            $data = DB::connection('mysql_new')->SELECT("SELECT
+                *
+                FROM
+                driver_tasks
+                WHERE
+                purpose IS NULL
+                AND updated_at <= NOW() - INTERVAL 5 MINUTE
+                AND check_gasoline IS NULL;");
+            
+            $response = array(
+                'status' => true,
+                'data' => $data,
+            );
+            return Response::json($response);
+        } catch (\Exception$e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+    }
+
 }
