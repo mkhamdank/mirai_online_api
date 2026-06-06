@@ -1931,6 +1931,7 @@ class MasterController extends Controller
                 WHERE
                 purpose IS NULL
                 AND updated_at <= NOW() - INTERVAL 5 MINUTE
+                AND times is not null
                 AND check_gasoline IS NULL;");
             
             $response = array(
