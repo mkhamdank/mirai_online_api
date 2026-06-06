@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->post('/delete/driver_task/{task_id}', 'App\Ht
 Route::middleware('auth:sanctum')->post('/input/driver_task', 'App\Http\Controllers\MasterController@inputDriverTask');
 
 Route::middleware('auth:sanctum')->post('/input/driver_lists', 'App\Http\Controllers\MasterController@inputDriverLists');
+Route::middleware('auth:sanctum')->post('/input/driver_gasoline_prices', 'App\Http\Controllers\MasterController@inputDriverGasolinePrices');
 
 // FA
 Route::middleware('auth:sanctum')->get('/fetch/sync_fixed_asset', 'App\Http\Controllers\MasterController@syncFixedAsset');
@@ -88,9 +89,11 @@ Route::middleware('auth:sanctum')->get('/fetch/driver_japanese_holiday', 'App\Ht
 Route::middleware('auth:sanctum')->get('/fetch/driver_reguler', 'App\Http\Controllers\MasterController@fetchDriverReguler');
 
 Route::middleware('auth:sanctum')->get('/fetch/molding_master', 'App\Http\Controllers\MasterController@fetchMoldingMaster');
-Route::middleware('auth:sanctum')->get('/fetch/molding_history_input', 'App\Http\Controllers\MasterController@fetchMoldingHistoryInput');
+Route::middleware('auth:sanctum')->get('/fetch/molding_history_shot', 'App\Http\Controllers\MasterController@fetchMoldingHistoryInput');
 Route::middleware('auth:sanctum')->get('/fetch/molding_history_check', 'App\Http\Controllers\MasterController@fetchMoldingHistoryCheck');
+Route::middleware('auth:sanctum')->get('/fetch/molding_history_fail', 'App\Http\Controllers\MasterController@fetchMoldingHistoryFail');
 Route::middleware('auth:sanctum')->get('/fetch/molding_report/{form_number}', 'App\Http\Controllers\MasterController@fetchMoldingReport');
+Route::middleware('auth:sanctum')->get('/fetch/molding_monitoring', 'App\Http\Controllers\MasterController@fetchMoldingMonitoring');
 
 Route::middleware('auth:sanctum')->post('/input/images', 'App\Http\Controllers\MasterController@insertImages');
 

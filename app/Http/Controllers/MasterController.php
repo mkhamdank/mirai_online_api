@@ -1987,4 +1987,39 @@ class MasterController extends Controller
         
     }
 
+    public function inputDriverGasolinePrices(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+        try {
+            $truncate = DB::connection('mysql_new')
+            ->table('driver_gasoline_prices')
+            ->truncate();
+            for ($i = 0; $i < count($data); $i++) {
+                $insert = DB::connection('mysql_new')->table('driver_gasoline_prices')
+                ->insert(
+                    [
+                        'type' => $data[$i]['type'],
+                        'price' => $data[$i]['price'],
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    ]
+                );
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+
+        DB::commit();
+        $status = 200;
+        return response()->json($status);
+    }
+
 }
