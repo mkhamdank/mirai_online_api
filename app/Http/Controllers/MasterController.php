@@ -1960,13 +1960,13 @@ class MasterController extends Controller
 
             $update = null;
 
-            if($fuel_actual_after != 0 && $fuel_actual_after != null && $get_first->fuel_actual_after != $fuel_actual_after){
+            // if($fuel_actual_after != 0 && $fuel_actual_after != null && $get_first->fuel_actual_after != $fuel_actual_after){
                 $update = DB::connection('mysql_new')->table("driver_tasks")->where('task_id', $task_id)->update([
                     'fuel_actual_after' => $fuel_actual_after,
                     'check_gasoline' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ]);
-            }
+            // }
 
             $response = array(
                 'status' => true,
