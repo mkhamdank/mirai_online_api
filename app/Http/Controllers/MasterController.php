@@ -2022,4 +2022,25 @@ class MasterController extends Controller
         return response()->json($status);
     }
 
+    function checkVisitor(Request $request) {
+        try {
+            $visitor_id = $request->get('visitor_id');
+            $data = DB::connection('mysql_new')->table('visitors')->where('visitor_id', $visitor_id)->first();
+            $detail = DB::connection('mysql_new')->table('visitor_details')->where('visitor_id', $visitor_id)->get();
+
+            $response = array(
+                'status' => true,
+                'data' => $data,
+                'detail' => $detail,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+    }
+
 }

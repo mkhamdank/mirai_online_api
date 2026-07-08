@@ -57,6 +57,8 @@ Route::middleware('auth:sanctum')->get('/fetch/driver_log/outstanding', 'App\Htt
 
 Route::middleware('auth:sanctum')->post('/delete/driver_task/{task_id}', 'App\Http\Controllers\MasterController@deleteDriverTask');
 
+Route::middleware('auth:sanctum')->get('/fetch/visitor/check_visitor', 'App\Http\Controllers\MasterController@checkVisitor');
+
 Route::middleware('auth:sanctum')->post('/input/driver_task', 'App\Http\Controllers\MasterController@inputDriverTask');
 
 Route::middleware('auth:sanctum')->post('/input/driver_lists', 'App\Http\Controllers\MasterController@inputDriverLists');
