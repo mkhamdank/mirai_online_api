@@ -2027,11 +2027,17 @@ class MasterController extends Controller
             $visitor_id = $request->get('visitor_id');
             $data = DB::connection('mysql_new')->table('visitors')->where('visitor_id', $visitor_id)->first();
             $detail = DB::connection('mysql_new')->table('visitor_details')->where('visitor_id', $visitor_id)->get();
+            $card_id = [];
+            foreach ($detail as $key => $value) {
+                $card_id[] = $value->card_id;
+            }
+            $safety_induction = DB::connection('mysql_new')->table('visitor_safety_inductions')->whereIn('card_id', $card_id)->get();
 
             $response = array(
                 'status' => true,
                 'data' => $data,
                 'detail' => $detail,
+                'safety_induction' => $safety_induction,
             );
             return Response::json($response);
         } catch (\Exception $e) {
