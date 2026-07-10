@@ -2049,4 +2049,25 @@ class MasterController extends Controller
         }
     }
 
+    function getAllVisitor() {
+        try {
+            $data = DB::connection('mysql_new')->table('visitors')->get();
+            $detail = DB::connection('mysql_new')->table('visitor_details')->get();
+            $safety_induction = DB::connection('mysql_new')->table('visitor_safety_inductions')->get();
+            $response = array(
+                'status' => true,
+                'data' => $data,
+                'detail' => $detail,
+                'safety_induction' => $safety_induction,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+    }
+
 }
