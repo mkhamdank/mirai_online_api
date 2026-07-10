@@ -59,6 +59,8 @@ Route::middleware('auth:sanctum')->post('/delete/driver_task/{task_id}', 'App\Ht
 
 Route::middleware('auth:sanctum')->get('/fetch/visitor/check_visitor', 'App\Http\Controllers\MasterController@checkVisitor');
 Route::middleware('auth:sanctum')->get('/fetch/visitor/all', 'App\Http\Controllers\MasterController@getAllVisitor');
+Route::middleware('auth:sanctum')->post('/update/visitors', 'App\Http\Controllers\MasterController@updateVisitors');
+Route::middleware('auth:sanctum')->post('/update/safety_induction', 'App\Http\Controllers\MasterController@updateSafetyInduction');
 
 Route::middleware('auth:sanctum')->post('/input/driver_task', 'App\Http\Controllers\MasterController@inputDriverTask');
 

@@ -2051,14 +2051,67 @@ class MasterController extends Controller
 
     function getAllVisitor() {
         try {
-            $data = DB::connection('mysql_new')->table('visitors')->get();
-            $detail = DB::connection('mysql_new')->table('visitor_details')->get();
-            $safety_induction = DB::connection('mysql_new')->table('visitor_safety_inductions')->get();
+            $data = DB::connection('mysql_new')->table('visitors')->whereMonth('created_at', date('m'))->get();
+            $detail = DB::connection('mysql_new')->table('visitor_details')->whereMonth('created_at', date('m'))->get();
+            $safety_induction = DB::connection('mysql_new')->table('visitor_safety_inductions')->where('start_induction', '>=', date('Y-m-d'))->get();
             $response = array(
                 'status' => true,
                 'data' => $data,
                 'detail' => $detail,
                 'safety_induction' => $safety_induction,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+    }
+
+    function updateVisitors(Request $request) {
+        try {
+            $visitor_id = $request->get('visitor_id');
+            $update = DB::connection('mysql_new')->table('visitors')->where('visitor_id', $visitor_id)->update([
+                'data_updated' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+            $response = array(
+                'status' => true,
+                'message' => 'Visitors updated successfully',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+    }
+
+    function updateSafetyInduction(Request $request) {
+        try {
+            $card_id = $request->get('card_id');
+            $name = $request->get('name');
+            $check = DB::connection('mysql_new')->table('visitor_safety_inductions')->where('card_id', $card_id)
+            ->whereRaw("? BETWEEN start_induction AND end_induction", [now()])
+            ->first();
+
+            if(!$check) {
+                $insert = DB::connection('mysql_new')->table('visitor_safety_inductions')->insert([
+                    'card_id' => $card_id,
+                    'name' => $name,
+                    'start_induction' => date('Y-m-d'),
+                    'end_induction' => date('Y-m-d', strtotime('+1 year')),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            $response = array(
+                'status' => true,
+                'message' => 'Safety induction updated successfully',
             );
             return Response::json($response);
         } catch (\Exception $e) {
