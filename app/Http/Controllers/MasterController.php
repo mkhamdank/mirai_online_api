@@ -2051,9 +2051,15 @@ class MasterController extends Controller
 
     function getAllVisitor() {
         try {
-            $data = DB::connection('mysql_new')->table('visitors')->whereMonth('created_at', date('m'))->get();
-            $detail = DB::connection('mysql_new')->table('visitor_details')->whereMonth('created_at', date('m'))->get();
-            $safety_induction = DB::connection('mysql_new')->table('visitor_safety_inductions')->where('start_induction', '>=', date('Y-m-d'))->get();
+            $data = DB::connection('mysql_new')->table('visitors')->whereMonth('created_at', date('m'))
+            ->orderBy('created_at', 'desc')
+            ->get();
+            $detail = DB::connection('mysql_new')->table('visitor_details')->whereMonth('created_at', date('m'))
+            ->orderBy('created_at', 'desc')
+            ->get();
+            $safety_induction = DB::connection('mysql_new')->table('visitor_safety_inductions')->where('start_induction', '>=', date('Y-m-d'))
+            ->orderBy('start_induction', 'desc')
+            ->get();
             $response = array(
                 'status' => true,
                 'data' => $data,
