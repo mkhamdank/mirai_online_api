@@ -50,6 +50,8 @@ Route::middleware('auth:sanctum')->post('/input/qr_code', 'App\Http\Controllers\
 Route::middleware('auth:sanctum')->get('/fetch/driver_log', 'App\Http\Controllers\MasterController@fetchDriverLog');
 Route::middleware('auth:sanctum')->get('/fetch/attendance', 'App\Http\Controllers\MasterController@getAttendance');
 
+Route::middleware('auth:sanctum')->get('/fetch/driver_etoll_parking', 'App\Http\Controllers\MasterController@fetchDriverEtollParking');
+
 Route::middleware('auth:sanctum')->get('/fetch/driver_log/japanese', 'App\Http\Controllers\MasterController@fetchDriverLogJapanese');
 Route::middleware('auth:sanctum')->get('/fetch/driver_log/daily', 'App\Http\Controllers\MasterController@fetchDriverLogDaily');
 Route::middleware('auth:sanctum')->get('/fetch/driver_log/reguler', 'App\Http\Controllers\MasterController@fetchDriverLogReguler');

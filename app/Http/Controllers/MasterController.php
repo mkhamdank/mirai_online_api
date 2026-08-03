@@ -2129,4 +2129,19 @@ class MasterController extends Controller
         }
     }
 
+    public function fetchDriverEtollParking()
+    {
+
+        $driver_task = DB::connection('mysql_new')->table('driver_tasks')
+            ->where('remark','!=',null)
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'driver_task' => $driver_task,
+        );
+        return Response::json($response);
+    }
+    
+
 }
