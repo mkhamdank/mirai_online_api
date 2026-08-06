@@ -2057,7 +2057,7 @@ class MasterController extends Controller
             $detail = DB::connection('mysql_new')->table('visitor_details')->whereMonth('created_at', date('m'))
             ->orderBy('created_at', 'desc')
             ->get();
-            $safety_induction = DB::connection('mysql_new')->table('visitor_safety_inductions')->where('start_induction', '>=', date('Y-m-d'))
+            $safety_induction = DB::connection('mysql_new')->table('visitor_safety_inductions')
             ->orderBy('start_induction', 'desc')
             ->get();
             $response = array(
