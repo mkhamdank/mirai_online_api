@@ -432,6 +432,7 @@ class MasterController extends Controller
                     'quantity' => $po_detail['qty'],
                     'uom' => $po_detail['uom'],
                     'price' => $po_detail['price'],
+                    'driver' => $po_detail['driver'],
                     'created_by' => $po_detail['created_by'],
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
@@ -2141,6 +2142,58 @@ class MasterController extends Controller
             'driver_task' => $driver_task,
         );
         return Response::json($response);
+    }
+
+    function resetDriverTaskEtollParking(Request $request) {
+        try {
+            $order_id = $request->get('order_id');
+            $type = $request->get('type');
+            $due_date = $request->get('due_date');
+            $driver_id = $request->get('driver_id');
+
+            if($type == 'task' || $type == 'weekend'){
+                DB::connection('mysql_new')->table('driver_tasks')
+                ->where('task_id', $order_id)
+                ->update([
+                    'etoll' => null,
+                    'etoll_from' => null,
+                    'etoll_to' => null,
+                    'etoll_file' => null,
+                    'parking' => null,
+                    'parking_at' => null,
+                    'parking_file' => null,
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            if($type == 'daily'){
+                DB::connection('mysql_new')->table('driver_tasks')
+                ->where('task_id', $order_id)
+                ->where('driver_id', $driver_id)
+                ->whereDate('date_from', $due_date)
+                ->update([
+                    'etoll' => null,
+                    'etoll_from' => null,
+                    'etoll_to' => null,
+                    'etoll_file' => null,
+                    'parking' => null,
+                    'parking_at' => null,
+                    'parking_file' => null,
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            
+            $response = array(
+                'status' => true,
+                'message' => 'Driver task reset successfully',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
     }
     
 
