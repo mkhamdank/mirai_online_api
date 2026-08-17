@@ -112,3 +112,4 @@ Route::middleware('auth:sanctum')->get('/fetch/driver_gasoline_update', 'App\Htt
 Route::middleware('auth:sanctum')->post('/update/driver_gasoline_after', 'App\Http\Controllers\MasterController@updateGasolineAfter');
 
 Route::middleware('auth:sanctum')->post('/reset/driver_task_etoll_parking', 'App\Http\Controllers\MasterController@resetDriverTaskEtollParking');
+Route::middleware('auth:sanctum')->get('/fetch/driver_rent', 'App\Http\Controllers\MasterController@fetchDriverRent');

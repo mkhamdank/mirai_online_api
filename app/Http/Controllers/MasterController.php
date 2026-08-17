@@ -2195,6 +2195,19 @@ class MasterController extends Controller
             return response()->json($response, $status);
         }
     }
+
+    function fetchDriverRent() {
+        $rent = DB::connection('mysql_new')->table('equipment_plan_deliveries')
+            ->where('driver','!=',null)
+            ->where('po_date','>=',date('Y-m-d', strtotime('-1 month')))
+            ->get();
+
+        $response = array(
+            'status' => true,
+            'rent' => $rent,
+        );
+        return Response::json($response);
+    }
     
 
 }
