@@ -2162,6 +2162,9 @@ class MasterController extends Controller
                     'parking' => null,
                     'parking_at' => null,
                     'parking_file' => null,
+                    'parking_emoney' => null,
+                    'parking_at_emoney' => null,
+                    'parking_file_emoney' => null,
                     'updated_at' => date('Y-m-d H:i:s'),
                 ]);
             }
@@ -2178,6 +2181,9 @@ class MasterController extends Controller
                     'parking' => null,
                     'parking_at' => null,
                     'parking_file' => null,
+                    'parking_emoney' => null,
+                    'parking_at_emoney' => null,
+                    'parking_file_emoney' => null,
                     'updated_at' => date('Y-m-d H:i:s'),
                 ]);
             }
