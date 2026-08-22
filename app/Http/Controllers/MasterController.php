@@ -2165,6 +2165,7 @@ class MasterController extends Controller
                     'parking_emoney' => null,
                     'parking_at_emoney' => null,
                     'parking_file_emoney' => null,
+                    'closure_status' => 'japanese',
                     'updated_at' => date('Y-m-d H:i:s'),
                 ]);
             }
