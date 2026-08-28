@@ -2134,7 +2134,7 @@ class MasterController extends Controller
     {
 
         $driver_task = DB::connection('mysql_new')->table('driver_tasks')
-            ->where('remark','!=',null)
+            // ->where('remark','!=',null)
             ->get();
 
         $response = array(
