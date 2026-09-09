@@ -2217,74 +2217,204 @@ class MasterController extends Controller
         return Response::json($response);
     }
 
-    function inputDriverTaskEtollParking(Request $request) {
+    public function inputDriverTaskEtollParking(Request $request)
+    {
         try {
+
             $order_id = $request->get('order_id');
+
             $type = $request->get('type');
+
             $actual_from = $request->get('actual_from');
+
             $actual_to = $request->get('actual_to');
+
             $driver_id = $request->get('driver_id');
 
-            $etoll = $request->get('etoll');
-            $etoll_from = $request->get('etoll_from');
-            $etoll_to = $request->get('etoll_to');
-            $etoll_file = $request->get('etoll_file');
-            $parking = $request->get('parking');
-            $parking_at = $request->get('parking_at');
-            $parking_file = $request->get('parking_file');
-            $parking_emoney = $request->get('parking_emoney');
-            $parking_at_emoney = $request->get('parking_at_emoney');
-            $parking_file_emoney = $request->get('parking_file_emoney');
 
-            if($type == 'task' || $type == 'japanese'){
-                DB::connection('mysql_new')->table('driver_tasks')
-                ->where('task_id', $order_id)
-                ->update([
-                    'etoll' => $etoll,
-                    'etoll_from' => $etoll_from,
-                    'etoll_to' => $etoll_to,
-                    'etoll_file' => $etoll_file,
-                    'parking' => $parking,
-                    'parking_at' => $parking_at,
-                    'parking_file' => $parking_file,
-                    'parking_emoney' => $parking_emoney,
-                    'parking_at_emoney' => $parking_at_emoney,
-                    'parking_file_emoney' => $parking_file_emoney,
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ]);
-            }
-            if($type == 'daily'){
-                DB::connection('mysql_new')->table('driver_tasks')
-                ->where('task_id', $order_id)
-                ->where('driver_id', $driver_id)
-                ->whereDate('date_from', $due_date)
-                ->update([
-                    'etoll' => $etoll,
-                    'etoll_from' => $etoll_from,
-                    'etoll_to' => $etoll_to,
-                    'etoll_file' => $etoll_file,
-                    'parking' => $parking,
-                    'parking_at' => $parking_at,
-                    'parking_file' => $parking_file,
-                    'parking_emoney' => $parking_emoney,
-                    'parking_at_emoney' => $parking_at_emoney,
-                    'parking_file_emoney' => $parking_file_emoney,
-                    'closure_status' => 'daily_japanese',
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ]);
-            }
-            
-            $response = array(
-                'status' => true,
-                'message' => 'Driver task inputed successfully',
-            );
-            return Response::json($response);
-        } catch (\Exception $e) {
-            $status = 401;
-            $response = [
-                'error' => $e->getMessage(),
+            // ==============================================
+            // E-TOLL
+            // ==============================================
+
+            $etoll = $request->get('etoll');
+
+            $etoll_from = $request->get('etoll_from');
+
+            $etoll_to = $request->get('etoll_to');
+
+            $etoll_file = $request->get('etoll_file');
+
+
+            // ==============================================
+            // PARKING
+            // ==============================================
+
+            $parking = $request->get('parking');
+
+            $parking_at = $request->get('parking_at');
+
+            $parking_file = $request->get('parking_file');
+
+
+            // ==============================================
+            // PARKING E-MONEY
+            // ==============================================
+
+            $parking_emoney =
+                $request->get('parking_emoney');
+
+            $parking_at_emoney =
+                $request->get('parking_at_emoney');
+
+            $parking_file_emoney =
+                $request->get('parking_file_emoney');
+
+
+            // ==============================================
+            // NORMALIZE EMPTY STRING => NULL
+            // ==============================================
+
+            $etoll_from =
+                $etoll_from === '' ? null : $etoll_from;
+
+            $etoll_to =
+                $etoll_to === '' ? null : $etoll_to;
+
+            $etoll_file =
+                $etoll_file === '' ? null : $etoll_file;
+
+
+            $parking_at =
+                $parking_at === '' ? null : $parking_at;
+
+            $parking_file =
+                $parking_file === '' ? null : $parking_file;
+
+
+            $parking_at_emoney =
+                $parking_at_emoney === ''
+                ? null
+                : $parking_at_emoney;
+
+            $parking_file_emoney =
+                $parking_file_emoney === ''
+                ? null
+                : $parking_file_emoney;
+
+
+            // ==============================================
+            // DATA UPDATE
+            // ==============================================
+
+            $update = [
+
+                'etoll' => $etoll,
+
+                'etoll_from' => $etoll_from,
+
+                'etoll_to' => $etoll_to,
+
+                'etoll_file' => $etoll_file,
+
+
+                'parking' => $parking,
+
+                'parking_at' => $parking_at,
+
+                'parking_file' => $parking_file,
+
+
+                'parking_emoney' =>
+                    $parking_emoney,
+
+                'parking_at_emoney' =>
+                    $parking_at_emoney,
+
+                'parking_file_emoney' =>
+                    $parking_file_emoney,
+
+
+                'updated_at' =>
+                    date('Y-m-d H:i:s')
+
             ];
-            return response()->json($response, $status);
+
+
+            // ==============================================
+            // TASK / JAPANESE
+            // ==============================================
+
+            if (
+                $type == 'task' ||
+                $type == 'japanese'
+            ) {
+
+                DB::connection('mysql_new')
+                    ->table('driver_tasks')
+                    ->where('task_id', $order_id)
+                    ->update($update);
+
+            }
+
+
+            // ==============================================
+            // DAILY
+            // ==============================================
+
+            if ($type == 'daily') {
+
+                $update['closure_status'] =
+                    'daily_japanese';
+
+
+                $query =
+                    DB::connection('mysql_new')
+                        ->table('driver_tasks')
+                        ->where(
+                            'task_id',
+                            $order_id
+                        )
+                        ->where(
+                            'driver_id',
+                            $driver_id
+                        );
+
+
+                if (
+                    !is_null($actual_from) &&
+                    $actual_from != ''
+                ) {
+
+                    $query->whereDate(
+                        'date_from',
+                        date(
+                            'Y-m-d',
+                            strtotime($actual_from)
+                        )
+                    );
+
+                }
+
+
+                $query->update($update);
+
+            }
+
+
+            return Response::json([
+                'status' => true,
+                'message' =>
+                    'Driver task inputed successfully'
+            ]);
+
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ], 401);
+
         }
     }
     
