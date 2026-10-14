@@ -1786,6 +1786,7 @@ class MasterController extends Controller
                         'passenger_name' => $data[$i]['passenger_name'],
                         'passenger_category' => $data[$i]['passenger_category'],
                         'fuel_capacity' => $data[$i]['fuel_capacity'],
+                        'fuel_consumption' => $data[$i]['fuel_consumption'],
                         'created_by' => '1930',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
