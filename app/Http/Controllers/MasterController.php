@@ -2422,14 +2422,14 @@ class MasterController extends Controller
 
     function fetchDriverRequestGasoline() {
         $requests = DB::connection('mysql_new')->table('driver_fuel_requests')
-            ->where('synced','=',null)
+            ->where('synced_at','=',null)
             ->get();
 
         if(count($requests) > 0) {
             for ($i=0; $i < count($requests); $i++) { 
                 $update = DB::connection('mysql_new')->table('driver_fuel_requests')
                     ->where('id', $requests[$i]->id)
-                    ->update(['synced' => date('Y-m-d H:i:s')]);
+                    ->update(['synced_at' => date('Y-m-d H:i:s')]);
             }
         }
 
