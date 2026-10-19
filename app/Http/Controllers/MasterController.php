@@ -2153,7 +2153,7 @@ class MasterController extends Controller
             $due_date = $request->get('due_date');
             $driver_id = $request->get('driver_id');
 
-            if($type == 'task' || $type == 'weekend'){
+            if($type == 'task' || $type == 'weekend' || $type == 'gasoline'){
                 DB::connection('mysql_new')->table('driver_tasks')
                 ->where('task_id', $order_id)
                 ->update([
