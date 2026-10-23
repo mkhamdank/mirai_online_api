@@ -546,6 +546,9 @@ class MasterController extends Controller
                     'remark' => $email[0]['remark'],
                     'car' => $email[0]['car'],
                     'closure_status' => 'driver',
+                    'odometer' => $email[0]['odometer'],
+                    'fuel_type' => $email[0]['fuel_type'],
+                    'location' => $email[0]['location'],
                     'requested_id' => $email[0]['requested_id'],
                     'requested_name' => $email[0]['requested_name'],
                     'requested_phone' => $email[0]['requested_phone'],
@@ -1674,6 +1677,28 @@ class MasterController extends Controller
             'data_product_ng' => $product_ngs,
         );
         return response()->json($response);
+    }
+
+    public function fetchMoldingApproval($form_number)
+    {
+        $last_approved = DB::connection('mysql_new')->table('molding_diagnose_approvers')
+            ->where('form_number', $form_number)
+            ->whereNotNull('approve_at')
+            ->orderBy('approve_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $next_approver = DB::connection('mysql_new')->table('molding_diagnose_approvers')
+            ->where('form_number', $form_number)
+            ->whereNull('approve_at')
+            ->orderBy('id', 'asc')
+            ->first();
+
+        return response()->json([
+            'status' => true,
+            'last_approved' => $last_approved,
+            'next_approver' => $next_approver,
+        ]);
     }
 
     public function fetchMoldingMonitoring(Request $request)
