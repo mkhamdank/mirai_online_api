@@ -2465,6 +2465,48 @@ class MasterController extends Controller
         );
         return Response::json($response);
     }
+
+    function inputDailyManagement(Request $request) {
+        $data = $request->all();
+
+        DB::beginTransaction();
+        try {
+            $task_id = 'Daily_' . date('Ymd').'_'.date('His').'_'.rand(1000,9999);
+            $insert_driver_task = DB::table('driver_tasks')
+            ->insertGetId([
+                'task_id' => $task_id,
+                'created_by_id' => $data[0]['employee_id'],
+                'created_by_name' => $data[0]['employee_name'],
+                'driver_id' => $data[0]['driver_id'],
+                'driver_name' => $data[0]['driver_name'],
+                'driver_phone' => null,
+                'plat_no' => $data[0]['plat_no'],
+                'car' => $data[0]['car'],
+                'date_from' => $data[0]['date_from'],
+                'date_to' => $data[0]['date_to'],
+                'purpose' => 'Pekerjaan',
+                'remark' => 'daily_japanese',
+                'requested_id' => $data[0]['employee_id'],
+                'requested_name' => $data[0]['employee_name'],
+                'closure_status' => 'daily_japanese',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+            DB::commit();
+            $status = 200;
+            return response()->json($status);
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = 401;
+            $response = [
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, $status);
+        }
+
+        
+        
+    }
     
 
 }
