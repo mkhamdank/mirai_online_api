@@ -2489,6 +2489,8 @@ class MasterController extends Controller
                 'requested_id' => $data[0]['employee_id'],
                 'requested_name' => $data[0]['employee_name'],
                 'closure_status' => 'daily_japanese',
+                'synced' => date('Y-m-d H:i:s'),
+                'deleted_at' => date('Y-m-d H:i:s'),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
