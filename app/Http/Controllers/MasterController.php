@@ -2469,10 +2469,10 @@ class MasterController extends Controller
     function inputDailyManagement(Request $request) {
         $data = $request->all();
 
-        DB::beginTransaction();
+        // DB::beginTransaction();
         try {
             $task_id = 'Daily_' . date('Ymd').'_'.date('His').'_'.rand(1000,9999);
-            $insert_driver_task = DB::table('driver_tasks')
+            $insert_driver_task = DB::connection('mysql_new')->table('driver_tasks')
             ->insertGetId([
                 'task_id' => $task_id,
                 'created_by_id' => $data[0]['employee_id'],
@@ -2492,11 +2492,14 @@ class MasterController extends Controller
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
-            DB::commit();
+            // DB::commit();
             $status = 200;
-            return response()->json($status);
+            return response()->json([
+                'insert_driver_task' => $insert_driver_task,
+                'task_id' => $task_id
+            ]);
         } catch (\Exception $e) {
-            DB::rollback();
+            // DB::rollback();
             $status = 401;
             $response = [
                 'error' => $e->getMessage(),
